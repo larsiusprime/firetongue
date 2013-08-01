@@ -35,6 +35,7 @@ import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import firetongue.FireTongue;
+import firetongue.Replace;
 
 class Main extends Sprite {
 
@@ -50,11 +51,12 @@ class Main extends Sprite {
 	public function onInit(e:Event):Void {
 		text = new TextField();
 		text.width = 800;
+		text.height = 200;
 		text.y = (600 - text.height) / 2;
 		addChild(text);
 		
 		tongue = new FireTongue();
-		tongue.init("en-US", onFinish);			
+		tongue.init("en-US", onFinish, true);			
 				
 		locales = tongue.locales;
 		var xx:Float = 0;
@@ -93,18 +95,51 @@ class Main extends Sprite {
 	private function onClick1(e:MouseEvent):Void {onClick(1);}
 	private function onClick2(e:MouseEvent):Void {onClick(2);}
 	private function onClick3(e:MouseEvent):Void {onClick(3);}
+	private function onClick4(e:MouseEvent):Void {onClick(4);}
 	
 	private function onClick(i:Int):Void {		
 		trace("onClick(" + i + ")");
 		var locale:String = "";
 		if (i >= 0 && i < locales.length) {
 			locale = locales[i];
-			tongue.init(locale, onFinish);
+			tongue.init(locale, onFinish, true);
 		}	
 	}
 	
 	private function onFinish():Void {
-		text.text  = tongue.get("$HELLO_WORLD") + "\n";
-		text.text += tongue.get("$TEST_STRING");
+		text.text  = tongue.locale + "\n";
+		text.text += tongue.get("$INSTRUCTIONS") + "\n\n";
+		text.text += tongue.get("$HELLO_WORLD") + "\n";
+		text.text += tongue.get("$TEST_STRING") + "\n";
+		
+		if (tongue.missing_files != null) {
+			var str:String = tongue.get("$MISSING_FILES");
+			str = Replace.flags(str, ["<X>"], [Std.string(tongue.missing_files.length)]);
+			text.text += str + "\n";
+			for (file in tongue.missing_files) {
+				text.text += "\t" + file + "\n";
+			}
+		}
+		
+		if (tongue.missing_flags != null) {
+			var missing_flags = tongue.missing_flags;
+			
+			var miss_str:String = tongue.get("$MISSING_FLAGS");
+			
+			var count:Int = 0;
+			var flag_str:String = "";
+			
+			for (key in missing_flags.keys()) {
+				var list:Array<String> = missing_flags.get(key);
+				count += list.length;
+				for(flag in list){
+					flag_str += "\t" + flag + "\n";
+				}
+			}
+			
+			miss_str = Replace.flags(miss_str, ["<X>"], [Std.string(count)]);
+			text.text += miss_str + "\n";
+			text.text += flag_str + "\n";
+		}
 	}	
 }

@@ -6,6 +6,7 @@
 	-->
 	
 	<file id="data" value="data.csv"/>
+	<file id="data" value="more_data.csv"/>
 	<file id="fonts" value="fonts.xml"/>
 	
 	
@@ -32,23 +33,30 @@
 	<!--British English-->
     <locale id="en-GB" sort="1"> 
         <ui language="Language" region="Region"/>        
-        <label id="en-US,en-GB,en-CA" language="English" region="Great Britain"/>
+        <label id="en-US,en-GB,en-CA,yo-DA" language="English" region="Great Britain"/>
         <label id="nb-NO" language="Engelsk" region="Stor-Britannia"/>
     </locale>
 	
 	<!--Canadian English-->
     <locale id="en-CA" sort="2">
         <ui language="Language" region="Region"/>        
-        <label id="en-US,en-GB,en-CA" language="English" region="Canada"/>
+        <label id="en-US,en-GB,en-CA,yo-DA" language="English" region="Canada"/>
         <label id="nb-NO" language="Engelsk" region="Canada"/>
     </locale>
     
 	<!--Norwegian Bokmål-->
     <locale id="nb-NO" sort="6">
         <ui language="Språk" region="Område"/>                
-        <label id="en-US,en-GB,en-CA" language="Norwegian" region="Norway (Bokmål)"/>
+        <label id="en-US,en-GB,en-CA,yo-DA" language="Norwegian" region="Norway (Bokmål)"/>
         <label id="nb-NO" language="Norsk" region="Norge (Bokmål)"/>
     </locale>
+	
+	<!--Dagoban Yoda-ish-->
+	<locale id="yo-DA" sort="7">
+		<ui language="Language" region="Dagobah"/>
+		<label id="en-US,en-GB,en-CA,yo-DA" language="Yoda-ish" region="Dagobah"/>
+		<label id="nb-NO" language="Yoda-isk" region="Dagobah"/>
+	</locale>
 	
 	<!---
 	Any text blurbs that the translation interface itself needs are stored here rather than
@@ -61,19 +69,19 @@
 	
 	<note id="beta">
 		<!--This means that the translation has not been properly integrated yet-->
-		<text id="en-US,en-GB,en-CA" title="BETA" body="This translation is still in beta. Untranslated text, missing characters, and other visual glitches are very likely not the fault of the translator."/>
+		<text id="en-US,en-GB,en-CA,yo-DA" title="BETA" body="This translation is still in beta. Untranslated text, missing characters, and other visual glitches are very likely not the fault of the translator."/>
 		<text id="nb-NO" title="BETA" body="Denne oversettelsen er fortsatt i beta. Uoversatt tekst, manglende bokstaver, og andre visuelle problemer er svært sannsynlig ikke feil av oversetteren."/>
 	</note>
 	
 	<note id="volunteer">
 		<!--This means that a fan or other volunteer submitted this to us-->
-		<text id="en-US,en-GB,en-CA" title="VOLUNTEER" body="This is a volunteer fan translation.$N$NContributors:"/>
+		<text id="en-US,en-GB,en-CA,yo-DA" title="VOLUNTEER" body="This is a volunteer fan translation.$N$NContributors:"/>
 		<text id="nb-NO" title="FRIVILLIG" body="Dette er en frivillig oversettelse.$N$NBidragsytere:"/>
 	</note>
 	
 	<note id="official">
 		<!--This means that we solicited and paid the translator for an official translation-->
-		<text id="en-US,en-GB,en-CA" title="OFFICIAL" body="This is an official (paid) translation.$N$NContributors:"/>
+		<text id="en-US,en-GB,en-CA,yo-DA" title="OFFICIAL" body="This is an official (paid) translation.$N$NContributors:"/>
 		<text id="nb-US" title="OFFISIELL" body="Dette er en offisiell (betalt) oversettelse.$N$NBidragsytere:"/>
 	</note>
 	

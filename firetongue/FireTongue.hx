@@ -158,7 +158,7 @@ package firetongue;
 		public function get_missing_flags():Map < String, Array<String> > {
 			return _missing_flags;
 		}
-		
+				
 		/**
 		 * Initialize the localization structure
 		 * @param	locale_ desired locale string, ie, "en-US"
@@ -401,6 +401,7 @@ package firetongue;
 					tasklist.addTask(task);
 					if (_check_missing) {
 						task = new Task("check:" + value, loadFile, [fileNode, true], onLoadFile);
+						tasklist.addTask(task);
 					}
 				}else {
 					#if debug
@@ -447,7 +448,7 @@ package firetongue;
 			var text:String = "";
 			try{
 				if (_directory == "") {
-					text = Assets.getText("assets/locales/"+fname);
+					text = Assets.getText("assets/locales/" + fname);
 				}else {
 					#if (cpp || neko)
 						if(FileSystem.exists(_directory+"locales/" + fname)){
@@ -455,13 +456,10 @@ package firetongue;
 						}
 					#end
 				}
-			}catch(e:Error){
+			}catch(e:Dynamic){
 				#if debug
 					trace("ERROR: loadText(" + fname + ") failed");
 				#end
-				if (_check_missing) {
-					logMissingFile(fname);
-				}
 			}
 			return text;
 		}
@@ -573,28 +571,39 @@ package firetongue;
 			
 			var raw_data:String = "";
 			
+			var loc:String = _locale;
+			if (check_vs_default) {
+				loc = default_locale;
+			}
+			
 			switch(fileType) {
 				case "csv":
-					var raw_data = loadText(_locale + "/" + fileName);
+					var raw_data = loadText(loc + "/" + fileName);
 					var delimeter:String = ",";
 					if (fileData.node.file.has.delimeter) {
 						delimeter = fileData.node.file.att.delimeter;
 					}
 					if(raw_data != "" && raw_data != null){
 						processCSV(raw_data, fileID, delimeter, check_vs_default);
+					}else if (_check_missing) {
+						logMissingFile(fileName);
 					}
 				case "xml":
 					if(!check_vs_default){	//xml (ie font rules) don't need safety checks
-						var raw_data = loadText(_locale+"/"+fileName);
+						var raw_data = loadText(loc + "/" + fileName);
 						var xml:Fast = new Fast(Xml.parse(raw_data));
 						if(raw_data != "" && raw_data != null){
 							processXML(xml, fileID);
+						}else if (_check_missing) {
+							logMissingFile(fileName);
 						}
 					}
 				case "png":
-					var bmp_data = loadImage(_locale + "/" + fileName);
+					var bmp_data = loadImage(loc + "/" + fileName);
 					if (bmp_data != null) {					
 						processPNG(bmp_data, fileID, check_vs_default);						
+					}else if(_check_missing){
+						logMissingFile(fileName);
 					}
 			}			
 			return fileName;
@@ -606,6 +615,19 @@ package firetongue;
 			if (_files_loaded == _list_files.length) {
 				
 				_loaded = true;
+		
+				if (_check_missing) {
+					if (_missing_files.length == 0) {
+						_missing_files = null;
+					}
+					var i:Int = 0;
+					for (key in _missing_flags.keys()) {
+						i++;
+					}
+					if (i == 0) {
+						_missing_flags = null;
+					}
+				}
 				
 				if (_callback_finished != null) {		
 					_callback_finished();					
