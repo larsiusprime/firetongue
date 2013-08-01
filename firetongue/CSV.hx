@@ -48,7 +48,7 @@ class CSV
 		
 		//You can provide your own customer delimeter, but we generally don't recommend it
 		if (delimeter != ",") {
-			rgxSplitLine = new EReg('~/' + delimeter + '/,(?=(?:[^\x22]*\x22[^\x22]*\x22)*(?![^\x22]*\x22))/',"gm");
+			rgxSplitLine = new EReg(delimeter + '(?=(?:[^\x22]*\x22[^\x22]*\x22)*(?![^\x22]*\x22))',"gm");
 		}
 		
 		// Get all the cells
