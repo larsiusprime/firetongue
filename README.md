@@ -144,3 +144,31 @@ FireTongue and [Flixel-UI](https://github.com/haxeflixel/flixel-ui) are specific
 A demo project, available here in [flixel-demos](https://github.com/HaxeFlixel/flixel-demos/tree/master/User%20Interface/Menus) and on the [HaxeFlixel website](http://www.haxeflixel.com/demos/rpg-interface) demonstrates this integration.
 
 (More documentation to follow)
+
+**Missing Files**
+
+If firetongue can't find a file on a get() call, it will by default return that file to you. You can force it to throw an error by setting the third parameter to false;
+
+When you load your files, you can tell FireTongue to check for missing files and flags:
+
+    public function init(
+        locale_:String,        
+        finished_:Dynamic=null, 
+        check_missing_:Bool=false, 
+        replace_missing_:Bool = false, 
+        directory_:String=""
+    ):Void{
+		
+*Check Missing*:
+
+    check_missing_
+
+If this is true, FireTongue will check this locale's information against the default locale (specified in index.xml) and look for missing files and flags. It will then generate two public lists: 
+
+    _missing_flags, _missing_files
+
+*Replace Missing*:
+
+    replace_missing
+
+When a flag is found to be missing, rather than leave the entry blank, FireTongue will replace it with the version from the default locale (This only works if check missing is activated, too).
