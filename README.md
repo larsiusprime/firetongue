@@ -39,7 +39,7 @@ In your OpenFL assets directory, create a folder setup like this:
         * nb-NO/
         * index.xml
 
-Note that folder like "en-US" and "nb-NO" are content folder for specific locales, in this case American English (en-US) and Norwegian Bokmål (nb-NO). You don't need those two specifically, I just used them as an example. You should provide any other locales, such as French French (fr-FR) or British English (en-GB) in the same location.
+Note that folders like "en-US" and "nb-NO" are content folders for specific locales, in this case American English (en-US) and Norwegian Bokmål (nb-NO). You don't need those two specifically, I just used them as an example. You should provide any other locales, such as French French (fr-FR) or British English (en-GB) in the same location.
 
 The **_flags** folder is where you should store flag icons for your locales. I strongly recommend [this set](http://www.famfamfam.com/lab/icons/flags/) from [famfamfam](http://www.famfamfam.com ), and I've included some of those in the sample project. 
 
@@ -90,7 +90,7 @@ If you follow the above rules, you should be able to put just about anything ins
 
     "$EVIL_STRING","I will break it with commas, and "quotation marks" !!!",
 
-But I wouldn't push it. Use these characters instead of quotes if you can: “ ”, or else use on of firetongue's special replacement characters to deal with it:
+But I wouldn't push it. Use these characters instead of quotes if you can: “ ”, or else use one of firetongue's special replacement characters to deal with it:
 
     <Q>  = Standard single quotation mark ( " )
     <LQ> = Fancy left quotation mark ( “ )
