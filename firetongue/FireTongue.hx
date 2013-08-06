@@ -282,9 +282,6 @@ package firetongue;
 			index = null;
 			
 			if (str == null) {
-				#if debug
-					trace("ERROR ERROR -- LocaleData.getText(" + flag + "," + context + ")");
-				#end
 				if (safe) {
 					return orig_flag;
 				}
