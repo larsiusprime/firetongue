@@ -494,7 +494,9 @@ package firetongue;
 				if (value != "") {
 					var task:Task;
 					task = new Task("load:" + value,loadFile,[fileNode],onLoadFile);							
+										
 					tasklist.addTask(task);
+					
 					if (_check_missing) {
 						task = new Task("check:" + value, loadFile, [fileNode, true], onLoadFile);
 						tasklist.addTask(task);
