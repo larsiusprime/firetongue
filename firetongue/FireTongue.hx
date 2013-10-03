@@ -647,11 +647,13 @@ package firetongue;
 		}
 		
 		private function printIndex(id:String,index:Map < String, Dynamic > ):Void {
-			trace("printIndex(" + id + ")");
-			
-			for (key in index.keys()) {
-				trace("..." + key + "," + index.get(key));
-			}
+			#if debug
+				trace("printIndex(" + id + ")");
+				
+				for (key in index.keys()) {
+					trace("..." + key + "," + index.get(key));
+				}
+			#end
 		}
 				
 		/**
