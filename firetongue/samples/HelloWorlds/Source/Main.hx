@@ -83,21 +83,17 @@ class Main extends Sprite {
 			sb.y = 4;
 			sb.x = xx + 4;
 			xx += (sb.width + 4);
+			
+			sb.name = "Locale" + i;
 						
 			addChild(sb);			
-			
-			sb.addEventListener(MouseEvent.CLICK, Reflect.field(this,"onClick"+i));
+			sb.addEventListener(MouseEvent.CLICK, onClick);
 			i++;
 		}
 	}
 	
-	private function onClick0(e:MouseEvent):Void {onClick(0);}
-	private function onClick1(e:MouseEvent):Void {onClick(1);}
-	private function onClick2(e:MouseEvent):Void {onClick(2);}
-	private function onClick3(e:MouseEvent):Void {onClick(3);}
-	private function onClick4(e:MouseEvent):Void {onClick(4);}
-	
-	private function onClick(i:Int):Void {		
+	private function onClick(e:MouseEvent):Void {
+		var i = Std.parseInt (cast (e.currentTarget, SimpleButton).name.charAt (6));		
 		trace("onClick(" + i + ")");
 		var locale:String = "";
 		if (i >= 0 && i < locales.length) {

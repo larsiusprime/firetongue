@@ -493,7 +493,7 @@ package firetongue;
 				}
 				if (value != "") {
 					var task:Task;
-					task = new Task("load:" + value,loadFile,[fileNode],onLoadFile);							
+					task = new Task("load:" + value,loadFile,[fileNode],onLoadFile);
 										
 					tasklist.addTask(task);
 					
