@@ -677,14 +677,23 @@ package firetongue;
 			}
 			
 			switch(fileType) {
+				case "tsv":
+					var raw_data = loadText(loc + "/" + fileName);
+					if (raw_data != "" && raw_data != null) {
+						var tsv:TSV = new TSV(raw_data);
+						processCSV(tsv, fileID, check_vs_default);
+					}else if (_check_missing) {
+						logMissingFile(fileName);
+					}
 				case "csv":
 					var raw_data = loadText(loc + "/" + fileName);
 					var delimeter:String = ",";
 					if (fileData.node.file.has.delimeter) {
 						delimeter = fileData.node.file.att.delimeter;
 					}
-					if(raw_data != "" && raw_data != null){
-						processCSV(raw_data, fileID, delimeter, check_vs_default);
+					if (raw_data != "" && raw_data != null) {
+						var csv:CSV = new CSV(raw_data, delimeter);
+						processCSV(csv, fileID, check_vs_default);
 					}else if (_check_missing) {
 						logMissingFile(fileName);
 					}
@@ -735,8 +744,7 @@ package firetongue;
 			}			
 		}
 		
-		private function processCSV(csv:String, id:String, delimeter:String = ",", check_vs_default:Bool=false):Void {
-			var csv:CSV = new CSV(csv, delimeter);
+		private function processCSV(csv:CSV, id:String, check_vs_default:Bool = false):Void {
 			var flag:String = "";
 			var field_num:Int = csv.fields.length;
 			
