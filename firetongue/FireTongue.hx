@@ -479,7 +479,7 @@ package firetongue;
 			if(_list_files == null){	
 				loadIndex();
 			}
-
+			
 			//we need new ones of these no matter what:
 			_index_data = new Map<String,Map<String,String>>();
 			_index_font = new Map<String,Fast>();
