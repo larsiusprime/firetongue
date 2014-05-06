@@ -664,7 +664,7 @@ package firetongue;
 		private function getDirectoryContents(str):Array<String>{
 			#if (cpp || neko)
 				return FileSystem.readDirectory(_directory + str);
-			#elseif flash
+			#else
 				var arr:Array<String> = [];
 				var defaultLibrary = Assets.libraries.get("default");
 				if (defaultLibrary != null) {
