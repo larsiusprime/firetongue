@@ -159,10 +159,9 @@ package firetongue;
 		 * @param	check_missing_ if true, compares against default locale for missing files/flags
 		 * @param   replace_missing_ if true, replaces any missing files & flags with default locale values
 		 * @param	directory_ alternate directory to look for locale. Otherwise, is "assets/"
-		 * @param	matchClosestLocale_ if the locale is not found, keep searching until we find the closest one
 		 */
 		
-		public function init(locale_:String, finished_:Dynamic=null, check_missing_:Bool=false, replace_missing_:Bool = false, directory_:String="",matchClosestLocale_:Bool=true):Void{
+		public function init(locale_:String, finished_:Dynamic=null, check_missing_:Bool=false, replace_missing_:Bool = false, directory_:String=""):Void{
 			#if debug
 				trace("LocaleData.init(" + locale_ + "," + finished_ + "," + check_missing_ + "," + replace_missing_ +"," +directory_+")");
 			#end
