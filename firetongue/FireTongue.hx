@@ -76,8 +76,6 @@ package firetongue;
 	 
 	class FireTongue
 	{		
-		private var _locale:String;
-		
 		//All of the game's localization data
 		private var _index_data:Map < String, Map < String, String >> ;
 		
@@ -101,11 +99,9 @@ package firetongue;
 		public static var default_locale:String = "en-US";
 		
 		private var _callback_finished:Dynamic;
-			//private var _callback_progress:Dynamic;
-			//private var _callback_error:Dynamic;
 		
 		private var _list_files:Array<Fast>;
-		private var _files_loaded:Int = 0;		
+		private var _files_loaded:Int = 0;
 		
 		private var _safety_bit:Int = 0;
 		
@@ -131,10 +127,7 @@ package firetongue;
 			return _loaded;
 		}
 		
-		public var locale(get, null):String;		
-		public function get_locale():String {
-			return _locale;
-		}
+		public var locale(default, null):String;		
 		
 		public var locales(get, null):Array<String>;
 		public function get_locales():Array<String> {
@@ -166,18 +159,20 @@ package firetongue;
 		 * @param	check_missing_ if true, compares against default locale for missing files/flags
 		 * @param   replace_missing_ if true, replaces any missing files & flags with default locale values
 		 * @param	directory_ alternate directory to look for locale. Otherwise, is "assets/"
+		 * @param	matchClosestLocale_ if the locale is not found, keep searching until we find the closest one
 		 */
 		
-		public function init(locale_:String, finished_:Dynamic=null, check_missing_:Bool=false, replace_missing_:Bool = false, directory_:String=""):Void{
+		public function init(locale_:String, finished_:Dynamic=null, check_missing_:Bool=false, replace_missing_:Bool = false, directory_:String="",matchClosestLocale_:Bool=true):Void{
 			#if debug
 				trace("LocaleData.init(" + locale_ + "," + finished_ + "," + check_missing_ + "," + replace_missing_ +"," +directory_+")");
 			#end
 			
-			_locale = localeFormat(locale_);
-			_directory = directory_;			
+			locale = localeFormat(locale_);
+			_directory = directory_;
 			
-			if (_loaded) {				
-				clearData();	//if we have an existing locale already loaded, clear it out first			
+			if (_loaded)
+			{
+				clearData();	//if we have an existing locale already loaded, clear it out first
 			}
 			
 			_callback_finished = finished_;
@@ -185,7 +180,7 @@ package firetongue;
 			_check_missing = false;
 			_replace_missing = false;
 			
-			if (_locale != default_locale) {				
+			if (locale != default_locale) {
 				_check_missing = check_missing_;
 				_replace_missing = replace_missing_;
 			}
@@ -476,13 +471,16 @@ package firetongue;
 		private function startLoad():Void {
 			
 			//if we don't have a list of files, we need to process the index first
-			if(_list_files == null){	
+			if (_list_files == null)
+			{
 				loadIndex();
 			}
 			
 			//we need new ones of these no matter what:
 			_index_data = new Map<String,Map<String,String>>();
 			_index_font = new Map<String,Fast>();
+			
+			loadRootDirectory();		//make sure we can find our root directory
 			
 			//Load all the files in our list of files
 			var tasklist:TaskList = new TaskList();
@@ -562,6 +560,128 @@ package firetongue;
 			return text;
 		}
 		
+		private function loadRootDirectory():Void {
+			var firstFile = _list_files[0];
+			var value:String = "";
+			if (firstFile.hasNode.file && firstFile.node.file.has.value) {
+				value = firstFile.node.file.att.value;
+			}
+			if (value != "")
+			{
+				var testText:String = loadText(locale+"/"+value);
+				if (testText == "" || testText == null) {
+					#if debug
+						trace("ERROR: default locale(" + locale+") not found, searching for closest match...");
+					#end
+					var newLocale:String = findClosestExistingLocale(locale, value);
+					#if debug
+						trace("--> going with: " + newLocale);
+					#end
+					if (newLocale != "") {
+						locale = newLocale;
+					}
+				}
+			}
+		}
+		
+		private function findClosestExistingLocale(localeStr:String,testFile:String):String
+		{
+			var paths:Array<String> = null;
+			var dirpath:String = "";
+			var bestLocale:String = "";
+			var bestDiff:Int = 99999;
+			#if (cpp || neko)
+				dirpath = "assets/locales";
+			#elseif flash
+				dirpath = "assets/locales/";
+			#end
+			
+			#if debug
+				trace("--> looking in: " + dirpath);
+			#end
+			
+			paths = getDirectoryContents(dirpath);
+			
+			var localeCandidates:Array<String> = [];
+			
+			for (str in paths) {
+				str = StringTools.replace(str, dirpath, "");
+				var newLocale:String = "";
+				#if flash
+				if (str.indexOf("/") != -1) {
+					newLocale = str.substr(0, str.indexOf("/"));
+				}
+				#elseif(cpp || neko)
+					newLocale = str;
+				#end
+				if(newLocale.indexOf("_") != 0 && newLocale.indexOf(".") == -1){
+					if (localeCandidates.indexOf(newLocale) == -1)
+					{
+						localeCandidates.push(newLocale);
+					}
+				}
+			}
+			
+			#if debug
+				trace("--> candidates: " + localeCandidates);
+			#end
+			
+			bestLocale = localeStr;
+			bestDiff = 99999;
+			
+			for (loc in localeCandidates) {
+				var diff:Int = stringDiff(localeStr, loc, false);
+				if (diff < bestDiff) {
+					bestDiff = diff;
+					bestLocale = loc;
+				}
+			}
+			
+			return bestLocale;
+		}
+		
+		private function stringDiff(a:String, b:String, caseSensitive:Bool=true):Int {
+			var totalDiff:Int = 0;
+			if (caseSensitive == false) {
+				a = a.toLowerCase();
+				b = b.toLowerCase();
+			}
+			for (i in 0...a.length) {
+				var char_a:String = a.charAt(i);
+				var char_b:String = "";
+				if (b.length > i) {
+					char_b = b.charAt(i);
+				}
+				var diff:Int = 0;
+				if (char_a != char_b) {
+					diff += 1;
+				}
+				totalDiff += diff;
+			}
+			return totalDiff;
+		}
+		
+		
+		private function getDirectoryContents(str):Array<String>{
+			#if (cpp || neko)
+				return FileSystem.readDirectory(_directory + str);
+			#elseif flash
+				var arr:Array<String> = [];
+				var defaultLibrary = Assets.libraries.get("default");
+				if (defaultLibrary != null) {
+					var types:Map<String,Dynamic> = DefaultAssetLibrary.type;
+					if (types != null) {
+						for (key in types.keys()) {
+							if(key.indexOf(str) != -1){
+								arr.push(key);
+							}
+						}
+					}
+				}
+				return arr;
+			#end
+		}
+		
 		/**
 		 * Loads and processes the index file
 		 */
@@ -621,8 +741,8 @@ package firetongue;
 			}
 			
 			//If the current locale is not defined yet, make it the default
-			if (_locale == "") {
-				_locale = default_locale;
+			if (locale == "") {
+				locale = default_locale;
 			}
 						
 			//Load and store all the translation notes
@@ -671,7 +791,7 @@ package firetongue;
 			
 			var raw_data:String = "";
 			
-			var loc:String = _locale;
+			var loc:String = locale;
 			if (check_vs_default) {
 				loc = default_locale;
 			}
