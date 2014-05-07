@@ -5,6 +5,10 @@ A translation/localization framework written in Haxe
 
 Installation 
 --
+Haxelib:
+
+    haxelib install firetongue
+    
 Command line:
 
     haxelib git firetongue https://github.com/larsiusprime/firetongue
