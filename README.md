@@ -100,7 +100,7 @@ But I wouldn't push it. Use these characters instead of quotes if you can: â€œ â
 
 FireTongue will automatically look for those characters and replace them on the fly. This is way easier than trying to get the parser to not choke on a cell with tons of standard commas, quotation marks, and line breaks inside of it.
 
-Finally, all firetongue CSV files must have two header fields -- "flag" and "content", like this:
+Finally, all firetongue CSV files MUST begin with two header fields -- "flag" and "content", like this:
 
     "flag","content",
 
