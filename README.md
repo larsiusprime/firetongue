@@ -149,7 +149,7 @@ By itself, Firetongue doesn't really deal with fonts - properly loading them and
 
 FireTongue and [Flixel-UI](https://github.com/haxeflixel/flixel-ui) are specifically designed to work together, though this is set up so that they don't actually depend on each other to compile and run.
 
-A demo project, available here in [flixel-demos](https://github.com/HaxeFlixel/flixel-demos/tree/master/User%20Interface/Menus) and on the [HaxeFlixel website](http://www.haxeflixel.com/demos/rpg-interface) demonstrates this integration.
+A demo project, available here in [flixel-demos](https://github.com/HaxeFlixel/flixel-demos/tree/master/User%20Interface/RPG%20Interface) and on the [HaxeFlixel website](http://haxeflixel.com/demos/RPGInterface/) demonstrates this integration.
 
 (More documentation to follow)
 
