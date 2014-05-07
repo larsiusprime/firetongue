@@ -9,7 +9,7 @@ Haxelib:
 
     haxelib install firetongue
     
-Command line:
+Using latest git version:
 
     haxelib git firetongue https://github.com/larsiusprime/firetongue
 
