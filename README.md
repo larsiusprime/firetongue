@@ -125,7 +125,7 @@ So here's how you would handle this with firetongue:
     import firetongue.Replace;
 
     str = fire_tongue_instance.get("$COLLECT_X_APPLES");
-    str = Replace.flags(str,["<X>"][num_apples]);
+    str = Replace.flags(str,["<X>"],[Std.string(num_apples)]);
 
 The "Replace" class lets you feed in an array of custom variable names that match what's in the translation string, as well as an array of corresponding replacement values. 
 
