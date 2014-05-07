@@ -32,7 +32,7 @@ Setup
 --
 In your OpenFL assets directory, create a folder setup like this:
 
-* Assets/
+* assets/
     * locales/
         * _flags/
         * en-US/
