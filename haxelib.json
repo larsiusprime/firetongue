@@ -3,11 +3,11 @@
  "url" : "https://github.com/larsiusprime/firetongue",
  "license": "MIT",
  "tags": ["translation","localization","language","game","text","openfl"],
- "description": "A localization/translation library for openfl",
+ "description": "A localization/translation library for OpenFL",
  "user":"larsiusprime",
  "version": "1.0.0",
  "releasenote": "First haxelib release",
- "contributors": ["larsiusprime","gama11"],
+ "contributors": ["larsiusprime"],
  "dependencies": { 
   "openfl": "",
   "task":""
