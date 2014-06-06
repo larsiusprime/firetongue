@@ -100,6 +100,7 @@ First, read this:
 
 Also, just because some spreadsheet program accepts your crazy custom TSV/CSV format doesn't mean that it's correct, and it could easily make FireTongue choke. FireTongue supports exactly two specific formats -- TSV, and CSV, subject to these rules:
 
+###TSV
 *Properly* formatted firetongue TSV files:
 
 * Do NOT wrap cells in quotes or any other sort of formatting.
@@ -108,10 +109,11 @@ Also, just because some spreadsheet program accepts your crazy custom TSV/CSV fo
 * End each line with a comma and endline
     * FireTongue accepts both windows and unix style endlines (theoretically) 
 
-The TSV format is preferred because it is simpler and faster for both humans to create, read, and parse. When properly formatted, no regular expressions are needed to parse TSV, only a String.split() command.
+The TSV format is preferred because it is simpler and faster for both humans and computers to create, read, and parse. When properly formatted, no regular expressions are needed to parse TSV, only a String.split() command.
 
 That said a specific CSV format is also available.
 
+###CSV
 *Properly* formatted firetongue CSV files:
 
 * Wrap each cell in a standard double-quote character, ( " ), 0x22 in UTF-8
