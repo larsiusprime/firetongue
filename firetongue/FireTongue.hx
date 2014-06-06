@@ -666,15 +666,11 @@ package firetongue;
 				return FileSystem.readDirectory(_directory + str);
 			#else
 				var arr:Array<String> = [];
-				var defaultLibrary = Assets.libraries.get("default");
+				var defaultLibrary:AssetLibrary = Assets.libraries.get("default");
 				if (defaultLibrary != null) {
-					var types:Map<String,Dynamic> = DefaultAssetLibrary.type;
-					if (types != null) {
-						for (key in types.keys()) {
-							if(key.indexOf(str) != -1){
-								arr.push(key);
-							}
-						}
+					for (str in defaultLibrary.list(TEXT))
+					{
+						arr.push(str);
 					}
 				}
 				return arr;

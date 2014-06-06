@@ -93,13 +93,13 @@ class Main extends Sprite {
 	}
 	
 	private function onClick(e:MouseEvent):Void {
-		var i = Std.parseInt (cast (e.currentTarget, SimpleButton).name.charAt (6));		
+		var i = Std.parseInt (cast (e.currentTarget, SimpleButton).name.charAt (6));
 		trace("onClick(" + i + ")");
 		var locale:String = "";
 		if (i >= 0 && i < locales.length) {
 			locale = locales[i];
 			tongue.init(locale, onFinish, true);
-		}	
+		}
 	}
 	
 	private function onFinish():Void {

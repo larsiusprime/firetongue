@@ -1,0 +1,6 @@
+flag	content	
+$INSTRUCTIONS	Klikk på et flagg for å laste teksten fra den lokalisering område.<N>Flere filer mangler fra noen områder, dette er tilsiktet.<N>Ideet er å demonstrere den <LQ>manglende filer sjekk<RQ> funksjonen.	
+$HELLO_WORLD	Hallo, verden!	
+$TEST_STRING	Min mor tok heisen til forsvarsbyrået.	
+$MISSING_FLAGS	Det mangler <X> lokalisering flagg:	
+$MISSING_FILES	Det mangler <X> lokalisering filer:	

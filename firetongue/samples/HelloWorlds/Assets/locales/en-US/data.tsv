@@ -1,0 +1,9 @@
+flag	content	
+$INSTRUCTIONS	Click a flag to load text from that locale.<N>Several files are intentionally missing from various locales.<N>This showcases the <LQ>missing file check<RQ> feature.	
+$HELLO_WORLD	Hello, World!	
+$TEST_STRING	My mom took the elevator to the defense department.	
+$MISSING_FLAGS	<X> localization flags are missing:	
+$MISSING_FILES	<X> localization files are missing:	
+$ANOTHER_STRING	Another string	
+$MORE_STRINGS	More strings	
+$LOOK_MORE_STRINGS	Look, even more strings!	

@@ -15,22 +15,25 @@
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
+    <class path="T:\Development\Git\firetongue" />
+    <class path="C:\HaxeToolkit\haxe\lib\task\1,0,6" />
+    <class path="C:\HaxeToolkit\haxe\lib\openfl\2,0,0" />
     <class path="Source" />
-    <class path="Export/flash/haxe" />
+    <class path="C:\HaxeToolkit\haxe\lib\openfl\2,0,0\backends\flash" />
+    <class path="Export\flash\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="nme4=1&#xA;tools=1&#xA;nme_ver=4.0.2&#xA;nme&#xA;nme_install_tool=1&#xA;display&#xA;web" />
+    <option directives="firetongue=0.0.1&#xA;task=1.0.6&#xA;openfl=2.0.0&#xA;tools=1.5.4&#xA;openfl-flash&#xA;display&#xA;web" />
     <option flashStrict="False" />
+    <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
-    <option additional="--no-output&#xA;-swf-version 11&#xA;#--remap nme:flash" />
+    <option additional="--no-output&#xA;-swf-version 11.2" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
-    <library name="openfl" />
-    <library name="task" />
-    <library name="firetongue" />
+    <!-- example: <library name="..." /> -->
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
@@ -42,7 +45,7 @@
   </library>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
-    <!-- example: <hidden path="..." /> -->
+    <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
   <preBuildCommand />
