@@ -52,13 +52,27 @@ The **_index.xml** file contains details about your localization setup, and the 
 As for your localization files themselves, the contents should look like this:
 
 * en-US/
-    * file1.csv
-    * file2.csv
+    * file1.tsv
+    * file2.tsv
     * fonts.xml
 
-Provide as many csv files as you like, as well as a fonts.xml file. The CSV files contain your actual localization data, and the fonts.xml specifies font replacement rules.
+Provide as many tsv files as you like, as well as a fonts.xml file. The TSV files contain your actual localization data, and the fonts.xml specifies font replacement rules.
 
-Here's the en-US version of the sample projects's data.csv file:
+Here's the en-US version of the sample projects's data.tsv file:
+
+    flag	content
+    $INSTRUCTIONS	Click a flag to load text from that locale.<N>Several files are intentionally missing from various locales.<N>This showcases the <LQ>missing file check<RQ> feature.	
+    $HELLO_WORLD	Hello, World!	
+    $TEST_STRING	My mom took the elevator to the defense department.	
+    $MISSING_FLAGS	<X> localization flags are missing:	
+    $MISSING_FILES	<X> localization files are missing:	
+    $ANOTHER_STRING	Another string	
+    $MORE_STRINGS	More strings	
+    $LOOK_MORE_STRINGS	Look, even more strings!	
+
+(Note that each cell ends with a TAB character, and each line ends with a TAB and then an endline)
+
+CSV format is also allowed, which would look like this:
 
     "flag","content",
     "$INSTRUCTIONS","Click a flag to load text from that locale.<N>Several files are intentionally missing from various locales.<N>This showcases the <LQ>missing file check<RQ> feature.",
@@ -72,8 +86,10 @@ Here's the en-US version of the sample projects's data.csv file:
 
 This creates a database of localization information, pairing "flags" with values. Instead of putting hard-coded text directly into your game code, you instead put a localization flag, like "$INSTRUCTIONS". Then, right before the text is displayed, you run FireTongue.get() and pass in your flag to get the localized string in the current locale. 
 
-CSV Formatting
+TSV/CSV Formatting
 --
+
+
 This is **extremely** important. You need to format these files perfectly or they won't work. 
 
 First, read this:
@@ -82,7 +98,21 @@ First, read this:
 
 **Use UTF-8 encoding ONLY!!!!!!**
 
-Also, just because some spreadsheet program accepts your crazy custom CSV format doesn't mean that it's correct, and it could easily make FireTongue choke. *Properly* formatted CSV files:
+Also, just because some spreadsheet program accepts your crazy custom TSV/CSV format doesn't mean that it's correct, and it could easily make FireTongue choke. FireTongue supports exactly two specific formats -- TSV, and CSV, subject to these rules:
+
+*Properly* formatted firetongue TSV files:
+
+* Do NOT wrap cells in quotes or any other sort of formatting.
+* Separate each cell with a single standard tab character, (	) 0x09 in UTF-8
+    * Do not use spaces, multiple tabs, a mixture of tabs and spaces, or any other whitespace!
+* End each line with a comma and endline
+    * FireTongue accepts both windows and unix style endlines (theoretically) 
+
+The TSV format is preferred because it is simpler and faster for both humans to create, read, and parse. When properly formatted, no regular expressions are needed to parse TSV, only a String.split() command.
+
+That said a specific CSV format is also available.
+
+*Properly* formatted firetongue CSV files:
 
 * Wrap each cell in a standard double-quote character, ( " ), 0x22 in UTF-8
     * Do not use the single-quote ( ' ) or left/right quotes (“ ”) or anything else!
@@ -94,19 +124,27 @@ If you follow the above rules, you should be able to put just about anything ins
 
     "$EVIL_STRING","I will break it with commas, and "quotation marks" !!!",
 
-But I wouldn't push it. Use these characters instead of quotes if you can: “ ”, or else use one of firetongue's special replacement characters to deal with it:
+But I wouldn't push it. Use these characters instead of quotes if you can: “ ”, or else use one of firetongue's special replacement characters to deal with these situations:
 
     <Q>  = Standard single quotation mark ( " )
     <LQ> = Fancy left quotation mark ( “ )
     <RQ> = Fancy right quotation mark ( ” )
     <C>  = Standard comma
     <N>  = Line break
+    <T>  = Tab
 
 FireTongue will automatically look for those characters and replace them on the fly. This is way easier than trying to get the parser to not choke on a cell with tons of standard commas, quotation marks, and line breaks inside of it.
 
-Finally, all firetongue CSV files MUST begin with two header fields -- "flag" and "content", like this:
+Finally, all firetongue TSV/CSV files MUST begin with two header fields -- "flag" and "content", like this:
+
+TSV:
+
+    flag	content	
+    
+CSV:
 
     "flag","content",
+
 
 Advanced Use
 --
@@ -122,11 +160,11 @@ This is a big no-no, because you're encoding grammar in the least flexibile part
 
 To avoid this, you let the translator specify where the variable should fall in the sentence. So in en-US it would be:
 
-    "$COLLECT_X_APPLES","Collect <X> apples!",
+    $COLLECT_X_APPLES	Collect <X> apples!	
 
 But in yo-DA (the fictional locale name for Dagoban Yoda-ish)
 
-    "$COLLECT_X_APPLES","<X> apples, collect you must! Yeeeessss!",
+    $COLLECT_X_APPLES	<X> apples, collect you must! Yeeeessss!	
 
 So here's how you would handle this with firetongue:
 
