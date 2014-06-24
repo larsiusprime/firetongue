@@ -254,8 +254,8 @@ package firetongue;
 						}
 					}
 					
-					var fix_a:Array<String> = ["<N>","<T>","<LQ>","<RQ>","<C>"];
-					var fix_b:Array<String> = ["\n","\t","“","”",","];
+					var fix_a:Array<String> = ["<N>","<T>","<LQ>","<RQ>","<C>","<Q>"];
+					var fix_b:Array<String> = ["\n","\t","“","”",",",'"'];
 					
 					if (str != null && str != "") {
 						for (i in 0...fix_a.length) {
@@ -264,7 +264,7 @@ package firetongue;
 							}
 						}
 					}
-				}							
+				}
 			}catch (e:Error) {
 				if (safe) {
 					return orig_flag;
