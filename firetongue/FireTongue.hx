@@ -118,16 +118,16 @@ package firetongue;
 			//does nothing
 		}
 		
-		public function clear(hard:Bool):Void {
+		public function clear(hard:Bool):Void{
 			clearData(hard);
 		}
-				
-		public var isLoaded(get, null):Bool;		
+		
+		public var isLoaded(get, null):Bool;
 		public function get_isLoaded():Bool {
 			return _loaded;
 		}
 		
-		public var locale(default, null):String;		
+		public var locale(default, null):String;
 		
 		public var locales(get, null):Array<String>;
 		public function get_locales():Array<String> {
@@ -137,11 +137,6 @@ package firetongue;
 			}return arr;
 		}
 		
-		/*public var locale_index(get, null):Map<String,Fast>;
-		public function get_locale_index():Map<String,Fast>{
-			return _index_locales;
-		}*/
-				
 		public var missing_files(get, null):Array<String>;
 		public function get_missing_files():Array<String> {
 			return _missing_files;	
@@ -151,7 +146,7 @@ package firetongue;
 		public function get_missing_flags():Map < String, Array<String> > {
 			return _missing_flags;
 		}
-				
+		
 		/**
 		 * Initialize the localization structure
 		 * @param	locale_ desired locale string, ie, "en-US"
@@ -193,7 +188,7 @@ package firetongue;
 		}
 		
 		
-		/*****LOOKUP FUNCTIONS*****/		
+		/*****LOOKUP FUNCTIONS*****/
 		
 		/**
 		 * Provide a localization flag to get the proper text in the current locale.
@@ -210,8 +205,8 @@ package firetongue;
 			if(context == "index"){
 				return getIndexString(flag);
 			}
-						
-			var index:Map<String,String>;						
+			
+			var index:Map<String,String>;
 			index = _index_data.get(context);
 			if (index == null) {
 				if (!safe) {
@@ -238,7 +233,7 @@ package firetongue;
 								str = new_str;
 								if (str.indexOf("<RE>") != 0) {			//if it's not ANOTHER redirect, stop looking
 									done = true;
-								}else {									
+								}else{
 									//another redirect, keep looking
 									str = StringTools.replace(str, "<RE>", "");
 								}
@@ -364,11 +359,11 @@ package firetongue;
 							}else{
 								return lang + " (" + langnative + ")";
 							}
-						case "$LANGUAGE(REGION)":	//return something like "Inglés (Estados Unidos)" in CURRENT language
+						case "$LANGUAGE(REGION)":	//return something like "Inglés (Estados Unidos)" in CURRENT language (ex: curr=spanish native=english)
 							var lang:String = getIndexString("$LANGUAGE:"+target_locale);
 							var reg:String = getIndexString("$REGION:" + target_locale);
 							return lang + "(" + reg + ")";
-						case "$LANGUAGE(REGION)_NATIVE": //return something like "English (United States)" in NATIVE language
+						case "$LANGUAGE(REGION)_NATIVE": //return something like "English (United States)" in NATIVE language (ex: curr=spanish native=english)
 							var lang:String = getIndexString("$LANGUAGE_NATIVE:"+target_locale);
 							var reg:String = getIndexString("$REGION_NATIVE:" + target_locale);
 							return lang + "(" + reg + ")";
@@ -693,13 +688,13 @@ package firetongue;
 				xml = new Fast(Xml.parse(index));
 				
 				//Create a list of file metadata from the list in the index
-				if(xml.hasNode.data && xml.node.data.hasNode.file){				
+				if(xml.hasNode.data && xml.node.data.hasNode.file){
 					for (fileNode in xml.node.data.nodes.file) {
 						_list_files.push(copyFast(fileNode));
-					}				
+					}
 				}
 			}
-					
+			
 			if (_index_locales == null) {
 				_index_locales = new Map<String,Fast>();
 			}
@@ -719,7 +714,7 @@ package firetongue;
 				id = localeNode.att.id;
 				_index_locales.set(id, localeNode);
 				
-				//load & store the flag image				
+				//load & store the flag image
 				var flag:BitmapData = loadImage("_flags/" + id + ".png");
 				_index_icons.set(id, flag); 
 				
@@ -753,7 +748,7 @@ package firetongue;
 					}
 					var title:String = textNode.att.title;
 					var body:String = textNode.att.body;
-					for (each_lid in larr) {						
+					for (each_lid in larr) {
 						_index_notes.set(id + "_" + each_lid + "_title", title);
 						_index_notes.set(id + "_" + each_lid + "_body", body);
 					}
@@ -779,7 +774,7 @@ package firetongue;
 		 */
 		
 		private function loadFile(fileData:Fast,check_vs_default:Bool=false):String{
-						
+			
 			var fileName:String = fileData.node.file.att.value;
 			var fileType:String = fileName.substr(fileName.length - 3, 3);
 			var fileID:String = fileData.node.file.att.id;
@@ -824,8 +819,8 @@ package firetongue;
 					}
 				case "png":
 					var bmp_data = loadImage(loc + "/" + fileName);
-					if (bmp_data != null) {					
-						processPNG(bmp_data, fileID, check_vs_default);						
+					if (bmp_data != null) {
+						processPNG(bmp_data, fileID, check_vs_default);
 					}else if(_check_missing){
 						logMissingFile(fileName);
 					}
@@ -853,10 +848,10 @@ package firetongue;
 					}
 				}
 				
-				if (_callback_finished != null) {		
-					_callback_finished();					
+				if (_callback_finished != null) {
+					_callback_finished();
 				}
-			}			
+			}
 		}
 		
 		private function processCSV(csv:CSV, id:String, check_vs_default:Bool = false):Void {
@@ -968,144 +963,8 @@ package firetongue;
 					var value:String = fontNode.att.value;
 					_index_font.set(value, copyFast(fontNode));
 				}
-			}			
-		}
-		
-		
-		/*
-		private function processFile():void {			
-			var filename:String = _list_files[_curr_file];
-			
-			CONFIG::air {
-				if(_stream_open){
-					_file_stream_string = _file_stream.readUTFBytes(_file_stream.bytesAvailable);
-					_file_stream.close(); 
-					_stream_open = false;
-				}
-			}
-			
-			if (filename != "index.xml") {
-				if (_locale == "") {		//STILL undefined?
-					if (default_locale == "") {
-						_locale = "en-US";		//fall back to English as safeguard
-					}else {
-						_locale = default_locale;
-					}
-				}				
-			}
-			
-			//if safety_bit is 0, just loads the thing, if it's 1, processes the data,
-			//but instead of storing it, checks it against existing data to look for
-			//missing stuff
-			
-			switch(filename) {
-				case "index.xml":
-					processIndex();
-					break;
-				case "data_achievements.csv":
-					processAchievements();
-					break;
-				case "data_defender.csv":
-					processDefender();
-					break;
-				case "data_enemy.csv":
-				case "data_enemy_plus.csv":
-					processEnemy();
-					break;
-				case "data_items.csv":
-					processItems();
-					break;
-				case "data_status_effects.csv":
-					processStatus();
-					break;
-				case "data_bonus.csv":
-					processBonus();
-					break;
-				case "cutscenes/scripts.csv":
-				case "scripts.csv":
-					processCutscenes();
-					break;
-				case "data_system.csv":
-					processSystem();
-					break;
-				case "data_journal.csv":
-					processJournal();
-					break;
-				case "maps.csv":
-					processGeneric(_index_data);
-					break;
-				case "fonts.xml":
-					processFonts();
-					break;
-				default:
-					if (filename.indexOf(".png") != -1) {
-						processImage();
-					}
-					break;
-			}
-			
-			if (!_do_safe_check) {
-				proceed();
-			}else {
-				if(default_locale != locale){
-					if (_safety_bit == 0) {			//first run, load safety check
-						var path:String = "locales" + _slash + default_locale + _slash;							
-						
-						if (Main.MOD_IS_ACTIVE && _mod_file_is_next){
-							path = Main.MOD_DIR.nativePath + _slash + path;
-						}else {
-							path = File.applicationDirectory.nativePath + _slash + path;
-						}
-						
-							loadFile(path + _list_files[_curr_file], onFileLoaded);			
-						_safety_bit = 1;
-					}else {							//second run, process safety check
-						_safety_bit = 0;
-						proceed();
-					}
-				}
 			}
 		}
-		
-		
-		private function writeIndex(index:Object, flag:String, value:String):void {			
-			var isFallThrough:Boolean = !_mod_file_is_next;
-			if (Main.MOD_IS_ACTIVE == false) {
-				isFallThrough = false;			//only deal with fallthrough logic if a mod is active!
-			}
-			
-			if (_safety_bit == 0) {
-				if (isFallThrough == true) {	
-					//this is a backup entry, a "fall through" for mods.
-					//only write this entry if you DON'T find a value already.
-					//This plugs "missing" localization holes with default text.
-					if (index[flag] == null) {
-						index[flag] = value;
-					}
-				}else{
-					index[flag] = value;		//write the entry
-				}
-			}else {
-				if (index[flag]) {	
-					//it exists, great
-				}else {						//check entry
-					if(value != ""){
-						var file:String = _list_files[_curr_file];
-						var i:int = _missing_list_files.indexOf(file);
-						if (i == -1) {
-							_missing_list.push("****** " + file.toUpperCase() + " ******");
-							_missing_list_files.push(file);
-						}
-						_missing_list.push(flag);						
-					}
-				}
-			}
-		}	
-			
-	
-		
-		
-		*/
 		
 		/**
 		 * Clear all the current localization data. 
