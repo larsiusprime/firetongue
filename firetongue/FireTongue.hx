@@ -987,26 +987,26 @@ package firetongue;
 			for (sub_key in _index_data.keys()) {				
 				var sub_index:Map<String,Dynamic> = _index_data.get(sub_key);
 				_index_data.remove(sub_key);				
-				clearIndex(sub_index);
+				clearMap(sub_index);
 				sub_index = null;
 			}
 			
-			clearIndex(_index_images);
-			clearIndex(_index_font);
+			clearBitmapDataMap(_index_images);
+			clearMap(_index_font);
 			
 			_index_images = null;
 			_index_font = null;
 			
 			if (hard) {
-				clearIndex(_index_locales);
-				clearIndex(_index_icons);
-				clearIndex(_index_notes);
+				clearMap(_index_locales);
+				clearBitmapDataMap(_index_icons);
+				clearMap(_index_notes);
 				_index_locales = null;
 				_index_icons = null;
 				_index_notes = null;
 			}
 			
-			clearIndex(_missing_flags);
+			clearMap(_missing_flags);
 			if(_missing_files != null){
 				while (_missing_files.length > 0) {
 					_missing_files.pop();
@@ -1017,31 +1017,22 @@ package firetongue;
 			_missing_flags = null;
 		}
 		
-		/**
-		 * Clear an index of its contents
-		 * @param	index a Map
-		 */
-		
-		private function clearIndex(index:Map < String, Dynamic > ):Void {
-			if (index == null) return;
-			
-			for (key in index.keys()) {
-				var thing:Dynamic = index.get(key);
-				index.remove(thing);
-				if (Std.is(thing, BitmapData)) {
-					var img:BitmapData = cast(thing, BitmapData);
-					img.dispose();
-					img = null;
-				}else if (Std.is(thing, Array)) {
-					var arr:Array<Dynamic> = cast(thing, Array<Dynamic>);
-					while (arr.length > 0) {
-						arr.pop();						
-					}
-					arr = null;
-				}
-				thing = null;
-			}
+		private function clearBitmapDataMap(map:Map<String, BitmapData>):Void {
+			clearMap(map, function (bitmapData:BitmapData) {
+				if (bitmapData != null) bitmapData.dispose();
+			});
 		}
 		
+		private function clearMap<T1, T2>(map:Map<T1, T2>, ?onRemove:T2->Void):Void {
+			if (map == null) return;
+			
+			for (key in map.keys()) {
+				var element = map.get(key);
+				if (onRemove != null) {
+					onRemove(element);
+				}
+				map.remove(key);
+			}
+		}
 	}
 
