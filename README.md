@@ -27,7 +27,9 @@ Usage
     tongue.init("en-US",onLoaded);
 
     function onLoaded():Void{
-        trace(tongue.get("$HELLO_WORLD"));  //outputs "Hello, World!"
+        trace(tongue.get("$HELLO_WORLD","data"));  
+        //outputs "Hello, World!" 
+        //(which is stored in the flag $HELLO_WORD in a file indexed by context id "data")
     }
 
 Of course, this assumes that you've done the proper setup.
@@ -48,6 +50,24 @@ Note that folders like "en-US" and "nb-NO" are content folders for specific loca
 The **_flags** folder is where you should store flag icons for your locales. I strongly recommend [this set](http://www.famfamfam.com/lab/icons/flags/) from [famfamfam](http://www.famfamfam.com ), and I've included some of those in the sample project. 
 
 The **_index.xml** file contains details about your localization setup, and the sample has an example with plenty of comments to document the procedure. 
+
+####Contexts:
+
+Notably, at the beginning of your index.xml you should list the files you are loading:
+
+````
+<file id="data" value="data.tsv"/>
+<file id="data" value="more_data.tsv"/>
+<file id="other" value="other_data.tsv"/> 
+````
+
+This loads your data into different "contexts," in case you have the same flags in different files. The context is specified by the "id" attribute -- you can think of this as similar to a "namespace."
+
+Whenever you call the FireTongue.get() function, the second parameter specifies the context, and its default value is "data" if not specified.
+
+**YOU MUST** supply a proper context id for your files, and if you choose some value other than "data" you *must* specify it when you call FireTongue.get().
+
+---
 
 As for your localization files themselves, the contents should look like this:
 
