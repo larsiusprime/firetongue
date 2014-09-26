@@ -655,15 +655,23 @@ package firetongue;
 			return totalDiff;
 		}
 		
-		
 		private function getDirectoryContents(str):Array<String>{
 			#if (cpp || neko)
 				return FileSystem.readDirectory(_directory + str);
 			#else
 				var arr:Array<String> = [];
-				var defaultLibrary:AssetLibrary = Assets.libraries.get("default");
-				if (defaultLibrary != null) {
-					for (str in defaultLibrary.list(TEXT))
+				var libraryArr:Array<String> = null;
+				#if (openfl >= "2.0.0") 
+					libraryArr = Assets.list(TEXT);
+				#else
+					var defaultLibrary:AssetLibrary = Assets.libraries.get("default");
+					if (defaultLibrary != null)
+					{
+						libraryArr = defaultLibrary.list(TEXT)
+					}
+				#end
+				if (libraryArr != null) {
+					for (str in libraryArr)
 					{
 						arr.push(str);
 					}
