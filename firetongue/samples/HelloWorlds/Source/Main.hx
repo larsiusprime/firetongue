@@ -36,12 +36,15 @@ import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import firetongue.FireTongue;
 import firetongue.Replace;
+import openfl.display.Shape;
 
 class Main extends Sprite {
 
 	private var tongue:FireTongue;
 	private var locales:Array<String>;
 	private var text:TextField;
+	
+	private var nonexistant:String = "ERROR";
 	
 	public function new () {		
 		super ();
@@ -62,6 +65,8 @@ class Main extends Sprite {
 		var xx:Float = 0;
 		
 		var i:Int = 0;
+		var lastx:Float = 0;
+		var lasty:Float = 0;
 		for (locale in locales) {
 			var img = tongue.getIcon(locale);
 			
@@ -89,7 +94,32 @@ class Main extends Sprite {
 			addChild(sb);			
 			sb.addEventListener(MouseEvent.CLICK, onClick);
 			i++;
+			
+			lastx = sb.x + sb.width + 4;
+			lasty = sb.y;
 		}
+		
+		var xgraphic:Shape = new Shape();
+		xgraphic.graphics.lineStyle(3, 0x000000);
+		xgraphic.graphics.moveTo(0, 0);
+		xgraphic.graphics.lineTo(48, 33);
+		xgraphic.graphics.moveTo(48, 0);
+		xgraphic.graphics.lineTo(0, 33);
+		
+		var xbmpdata:BitmapData = new BitmapData(48, 33, false, 0xffff0000);
+		var xbmp:Bitmap = new Bitmap(xbmpdata);
+		
+		xbmpdata.draw(xgraphic);
+		
+		var sb2:SimpleButton = new SimpleButton(xbmp, xbmp, xbmp, xbmp);
+		addChild(sb2);
+		sb2.x = lastx;
+		sb2.y = lasty;
+		sb2.addEventListener(MouseEvent.CLICK, onClick2);
+	}
+	
+	private function onClick2(e:MouseEvent):Void {
+		tongue.init(nonexistant, onFinish2, true);
 	}
 	
 	private function onClick(e:MouseEvent):Void {
@@ -100,6 +130,11 @@ class Main extends Sprite {
 			locale = locales[i];
 			tongue.init(locale, onFinish, true);
 		}
+	}
+	
+	private function onFinish2():Void {
+		onFinish();
+		text.text = "Could not find locale \"" + nonexistant + "\", closest match was:\n" + text.text;
 	}
 	
 	private function onFinish():Void {
