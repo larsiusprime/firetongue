@@ -583,7 +583,7 @@ package firetongue;
 			var paths:Array<String> = null;
 			var dirpath:String = "";
 			var bestLocale:String = "";
-			var bestDiff:Int = 99999;
+			var bestDiff:Float = Math.POSITIVE_INFINITY;
 			#if (cpp || neko)
 				dirpath = "assets/locales";
 			#elseif flash
@@ -621,7 +621,7 @@ package firetongue;
 			#end
 			
 			bestLocale = localeStr;
-			bestDiff = 99999;
+			bestDiff = Math.POSITIVE_INFINITY;
 			
 			for (loc in localeCandidates) {
 				var diff:Int = stringDiff(localeStr, loc, false);
@@ -636,21 +636,33 @@ package firetongue;
 		
 		private function stringDiff(a:String, b:String, caseSensitive:Bool=true):Int {
 			var totalDiff:Int = 0;
-			if (caseSensitive == false) {
+			if (caseSensitive == false)
+			{
 				a = a.toLowerCase();
 				b = b.toLowerCase();
 			}
-			for (i in 0...a.length) {
+			
+			var weight:Int = 1;
+			var max:Int = Std.int(Math.max(a.length, b.length));
+			for (j in 0...max)
+			{
+				weight *= 10;
+			}
+			
+			for (i in 0...a.length)
+			{
 				var char_a:String = a.charAt(i);
 				var char_b:String = "";
 				if (b.length > i) {
 					char_b = b.charAt(i);
 				}
 				var diff:Int = 0;
-				if (char_a != char_b) {
-					diff += 1;
+				if (char_a != char_b)
+				{
+					diff = Std.int(Math.abs(StringTools.fastCodeAt(char_a,0) - StringTools.fastCodeAt(char_b,0)));
 				}
-				totalDiff += diff;
+				totalDiff += diff * weight;
+				weight = Std.int(weight/10);
 			}
 			return totalDiff;
 		}
