@@ -874,11 +874,13 @@ package firetongue;
 			}
 		}
 		
-		private function processCSV(csv:CSV, id:String, check_vs_default:Bool = false):Void {
+		private function processCSV(csv:CSV, id:String, check_vs_default:Bool = false):Void
+		{
 			var flag:String = "";
 			var field_num:Int = csv.fields.length;
 			
-			if (_index_data.exists(id) == false) {
+			if (_index_data.exists(id) == false)
+			{
 				_index_data.set(id, new Map<String,String>());	//create the index for this id
 			}
 			
@@ -887,31 +889,39 @@ package firetongue;
 			
 			//count the number of non-comment fields 
 			//(ignore 1st field, which is flag root field)
-			for (fieldi in 1...csv.fields.length) {
+			for (fieldi in 1...csv.fields.length)
+			{
 				var field:String = csv.fields[fieldi];
-				if (field != "comment") {	
+				if (field != "comment")
+				{
 					_real_fields++;
 				}
 			}
 			
 			//Go through each row
-			for (rowi in 0...csv.grid.length) {
+			for (rowi in 0...csv.grid.length)
+			{
 				var row:Array<String> = csv.grid[rowi];
 				
 				//Get the flag root
 				flag = row[0];
 				
-				if(_real_fields > 2){
+				if (_real_fields > 2)
+				{
 					//Count all non-comment fields as suffix fields to the flag root
 					//Assume ("flag","suffix1","suffix2") pattern
 					//Write each cell as flag_suffix1, flag_suffix2, etc.
-					for (fieldi in 1...csv.fields.length) {
+					for (fieldi in 1...csv.fields.length)
+					{
 						var field:String = csv.fields[fieldi];
-						if (field != "comment") {							
-							writeIndex(_index, flag + "_" + field, row[fieldi],id,check_vs_default);
+						if (field != "comment")
+						{
+							writeIndex(_index, (flag + "_" + field).toUpperCase(), row[fieldi],id,check_vs_default);
 						}
 					}
-				}else if(_real_fields == 2) {
+				}
+				else if (_real_fields == 2)
+				{
 					//If only two non-comment fields, 
 					//Assume it's the standard ("flag","value") pattern
 					//Just write the first cell
