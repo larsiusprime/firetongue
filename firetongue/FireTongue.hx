@@ -949,6 +949,11 @@ package firetongue;
 		}
 		
 		private function logMissingFlag(id:String, flag:String):Void {
+			//Quick and dirty solution
+			if (_missing_flags == null) {
+				return;
+			}
+			
 			if (_missing_flags.exists(id) == false) {
 				_missing_flags.set(id, new Array<String>());
 			}
