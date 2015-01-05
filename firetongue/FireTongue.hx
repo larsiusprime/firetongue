@@ -975,13 +975,15 @@ package firetongue;
 		}
 		
 		private function logMissingFlag(id:String, flag:String):Void
-			//Quick and dirty solution
-			if (_missing_flags == null) {
-				return;
+		{
+			if (missing_flags == null)
+			{
+				missing_flags = new Map<String,Array<String>>();
 			}
 			
-			if (_missing_flags.exists(id) == false) {
-				_missing_flags.set(id, new Array<String>());
+			if(missing_flags.exists(id) == false)
+			{
+				missing_flags.set(id, new Array<String>());
 			}
 			var list:Array<String> = missing_flags.get(id);
 			list.push(flag);
