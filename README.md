@@ -126,7 +126,7 @@ Also, just because some spreadsheet program accepts your crazy custom TSV/CSV fo
 * Do NOT wrap cells in quotes or any other sort of formatting.
 * Separate each cell with a single standard tab character, (	) 0x09 in UTF-8
     * Do not use spaces, multiple tabs, a mixture of tabs and spaces, or any other whitespace!
-* End each line with a comma and endline
+* End each line with a TAB and endline
     * FireTongue accepts both windows and unix style endlines (theoretically) 
 
 The TSV format is preferred because it is simpler and faster for both humans and computers to create, read, and parse. When properly formatted, no regular expressions are needed to parse TSV, only a String.split() command.
