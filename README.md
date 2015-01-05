@@ -183,15 +183,13 @@ Even though this is marked as a .txt file, it is really a TSV format. Firetongue
 
 ###Exporting TSV files from LibreOffice
 
-First, click "Save as", then select CSV Format. In LibreOffice, TSV format is a special kind of CSV, so both formats start with the same option.
-
+First, click "Save as", then select CSV Format. In LibreOffice, TSV format is a special kind of CSV, so both formats start with the same option.<br>
 ![](/readme_assets/libre_csv.png)
 
-Enter ".tsv" as the file extension and make sure to check "automatic file name extension" and "edit filter settings"
+Enter ".tsv" as the file extension and make sure to check "automatic file name extension" and "edit filter settings".<br>
 ![](/readme_assets/libre_tsv.png)
 
-You'll see something like this come up. It has already select {Tab} as the delimeter for you! Make sure the character set is Unicode (UTF-8), and make sure Text delimeter is blank. (It might be a quotation mark). Make sure "quote all text cells" is NOT checked.
-
+You'll see something like this come up. It has already select {Tab} as the delimeter for you! Make sure the character set is Unicode (UTF-8), and make sure Text delimeter is blank. (It might be a quotation mark). Make sure "quote all text cells" is NOT checked.<br>
 ![](/readme_assets/libre_tsv_2.png)
 
 ###Exporting CSV files
