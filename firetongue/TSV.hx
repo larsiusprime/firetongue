@@ -40,13 +40,24 @@ class TSV extends CSV
 	
 	public function new(input:String) 
 	{
-		super("");					//satisfy the compiler, but do nothing
-		
-		_quoted = false;			//No quotation marks in TSV files!
-		
-		// Get all the cells
-		var cells:Array<String>;
-		cells = input.split("\t");	//Get all the cells in a much simpler way
-		processCells(cells);
+		super(input, "\t", false);
+	}
+	
+	private override function processRows(rows:Array<String>):Void
+	{
+		for (i in 0...rows.length)
+		{
+			var row:String = rows[i];
+			while (row.charAt(row.length - 1) == "\t")		//trim trailing tabs
+			{
+				row = row.substr(0, row.length - 1);
+			}
+			processCells(getCells(row), i);
+		}
+	}
+	
+	private override function getCells(row:String):Array<String>
+	{
+		return row.split("\t");		//Get all the cells in a much simpler way
 	}
 }

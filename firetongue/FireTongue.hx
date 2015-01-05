@@ -95,7 +95,7 @@ package firetongue;
 		private var _index_font:Map<String,Fast>;
 		
 		private var _loaded:Bool = false;
-					
+		
 		public static var default_locale:String = "en-US";
 		
 		private var _callback_finished:Dynamic;
@@ -105,11 +105,9 @@ package firetongue;
 		
 		private var _safety_bit:Int = 0;
 		
-		//TODO:
 		private var _check_missing:Bool = false;
 		private var _replace_missing:Bool = false;
-		private var _missing_flags:Map<String,Array<String>>;
-		private var _missing_files:Array<String>;
+		
 		
 		private var _directory:String = "";
 				
@@ -137,15 +135,8 @@ package firetongue;
 			}return arr;
 		}
 		
-		public var missing_files(get, null):Array<String>;
-		public function get_missing_files():Array<String> {
-			return _missing_files;	
-		}
-		
-		public var missing_flags(get, null):Map < String, Array<String> > ;
-		public function get_missing_flags():Map < String, Array<String> > {
-			return _missing_flags;
-		}
+		public var missing_files(default, null):Array<String>;
+		public var missing_flags(default, null):Map < String, Array<String> > ;
 		
 		/**
 		 * Initialize the localization structure
@@ -174,14 +165,16 @@ package firetongue;
 			_check_missing = false;
 			_replace_missing = false;
 			
-			if (locale != default_locale) {
+			if (locale != default_locale)
+			{
 				_check_missing = check_missing_;
 				_replace_missing = replace_missing_;
 			}
 			
-			if (_check_missing) {
-				_missing_files = new Array<String>();
-				_missing_flags = new Map<String,Array<String>>();
+			if (_check_missing)
+			{
+				missing_files = new Array<String>();
+				missing_flags = new Map<String,Array<String>>();
 			}
 			
 			startLoad();
@@ -217,7 +210,8 @@ package firetongue;
 			}
 			
 			var str:String = "";
-			try {			
+			try
+			{
 				str = index.get(flag);
 				
 				if(str != null && str != ""){
@@ -260,10 +254,15 @@ package firetongue;
 						}
 					}
 				}
-			}catch (e:Error) {
-				if (safe) {
+			}
+			catch (e:Error)
+			{
+				if (safe)
+				{
 					return orig_flag;
-				}else {
+				}
+				else 
+				{
 					throw new Error("LocaleData.getText(" + flag + "," + context + ")");
 				}
 			}
@@ -478,7 +477,7 @@ package firetongue;
 			
 			//Load all the files in our list of files
 			var tasklist:TaskList = new TaskList();
-			for (fileNode in _list_files) {
+			for (fileNode in _list_files){
 				var value:String = "";
 				if (fileNode.hasNode.file && fileNode.node.file.has.value) {
 					value = fileNode.node.file.att.value;
@@ -486,7 +485,7 @@ package firetongue;
 				if (value != "") {
 					var task:Task;
 					task = new Task("load:" + value,loadFile,[fileNode],onLoadFile);
-										
+					
 					tasklist.addTask(task);
 					
 					if (_check_missing) {
@@ -793,8 +792,8 @@ package firetongue;
 		 * @return
 		 */
 		
-		private function loadFile(fileData:Fast,check_vs_default:Bool=false):String{
-			
+		private function loadFile(fileData:Fast, check_vs_default:Bool = false):String
+		{
 			var fileName:String = fileData.node.file.att.value;
 			var fileType:String = fileName.substr(fileName.length - 3, 3);
 			var fileID:String = fileData.node.file.att.id;
@@ -802,73 +801,94 @@ package firetongue;
 			var raw_data:String = "";
 			
 			var loc:String = locale;
-			if (check_vs_default) {
+			if (check_vs_default)
+			{
 				loc = default_locale;
 			}
 			
-			switch(fileType) {
-				case "tsv":
+			switch(fileType)
+			{
+				case "txt","tsv":
 					var raw_data = loadText(loc + "/" + fileName);
-					if (raw_data != "" && raw_data != null) {
+					if (raw_data != "" && raw_data != null)
+					{
 						var tsv:TSV = new TSV(raw_data);
 						processCSV(tsv, fileID, check_vs_default);
-					}else if (_check_missing) {
+					}
+					else if (_check_missing)
+					{
 						logMissingFile(fileName);
 					}
 				case "csv":
 					var raw_data = loadText(loc + "/" + fileName);
 					var delimeter:String = ",";
-					if (fileData.node.file.has.delimeter) {
+					if (fileData.node.file.has.delimeter)
+					{
 						delimeter = fileData.node.file.att.delimeter;
 					}
-					if (raw_data != "" && raw_data != null) {
+					if (raw_data != "" && raw_data != null)
+					{
 						var csv:CSV = new CSV(raw_data, delimeter);
 						processCSV(csv, fileID, check_vs_default);
-					}else if (_check_missing) {
+					}
+					else if (_check_missing)
+					{
 						logMissingFile(fileName);
 					}
 				case "xml":
 					if(!check_vs_default){	//xml (ie font rules) don't need safety checks
 						var raw_data = loadText(loc + "/" + fileName);
 						var xml:Fast = new Fast(Xml.parse(raw_data));
-						if(raw_data != "" && raw_data != null){
+						if (raw_data != "" && raw_data != null)
+						{
 							processXML(xml, fileID);
-						}else if (_check_missing) {
+						}
+						else if (_check_missing)
+						{
 							logMissingFile(fileName);
 						}
 					}
 				case "png":
 					var bmp_data = loadImage(loc + "/" + fileName);
-					if (bmp_data != null) {
+					if (bmp_data != null)
+					{
 						processPNG(bmp_data, fileID, check_vs_default);
-					}else if(_check_missing){
+					}
+					else if (_check_missing)
+					{
 						logMissingFile(fileName);
 					}
 			}			
 			return fileName;
 		}
 		
-		private function onLoadFile(result:String):Void {
+		private function onLoadFile(result:String):Void
+		{
 			_files_loaded++;
 			
-			if (_files_loaded == _list_files.length) {
-				
+			if (_files_loaded == _list_files.length)
+			{
 				_loaded = true;
-		
-				if (_check_missing) {
-					if (_missing_files.length == 0) {
-						_missing_files = null;
+				
+				if (_check_missing)
+				{
+					if (missing_files.length == 0)
+					{
+						missing_files = null;
 					}
 					var i:Int = 0;
-					for (key in _missing_flags.keys()) {
+					for (key in missing_flags.keys())
+					{
 						i++;
 					}
-					if (i == 0) {
-						_missing_flags = null;
+					if (i == 0)
+					{
+						missing_flags = null;
 					}
 				}
 				
-				if (_callback_finished != null) {
+				if (_callback_finished != null)
+				{
 					_callback_finished();
 				}
 			}
@@ -933,34 +953,48 @@ package firetongue;
 			csv = null;
 		}
 		
-		private function writeIndex(_index:Map<String,String>,flag:String,value:String,id:String,check_vs_default:Bool=false):Void{
-			if (check_vs_default && _check_missing) {
+		private function writeIndex(_index:Map<String,String>, flag:String, value:String, id:String, check_vs_default:Bool = false):Void
+		{
+			if (check_vs_default && _check_missing)
+			{
 				//flag exists in default locale but not current locale
-				if (_index.exists(flag) == false) {
+				if (_index.exists(flag) == false)
+				{
 					logMissingFlag(id, flag);
-					if (_replace_missing) {
+					if (_replace_missing)
+					{
 						_index.set(flag, value);
 					}
 				}
-			}else {
+			}
+			else
+			{
 				//just store the flag/translation pair
 				_index.set(flag, value);
 			}
 		}
 		
-		private function logMissingFlag(id:String, flag:String):Void {
-			if (_missing_flags.exists(id) == false) {
-				_missing_flags.set(id, new Array<String>());
+		private function logMissingFlag(id:String, flag:String):Void
+		{
+			if (missing_flags.exists(id) == false)
+			{
+				missing_flags.set(id, new Array<String>());
 			}
-			var list:Array<String> = _missing_flags.get(id);
+			var list:Array<String> = missing_flags.get(id);
 			list.push(flag);
 		}
 		
-		private function logMissingFile(fname:String):Void {
-			_missing_files.push(fname);
+		private function logMissingFile(fname:String):Void
+		{
+			if (missing_files == null)
+			{
+				missing_files = [];
+			}
+			missing_files.push(fname);
 		}
 		
-		private function processXML(xml:Fast, id:String):Void {
+		private function processXML(xml:Fast, id:String):Void
+		{
 			//what this does depends on the id
 			switch(id) {
 				case "fonts":
@@ -970,26 +1004,35 @@ package firetongue;
 			}
 		}
 		
-		private function processPNG(img:BitmapData, id:String, check_vs_default:Bool=false):Void {
-			if (check_vs_default && _check_missing) {
-				if (_index_images.exists(id) == false) {	
-					//image exists in default locale but not current locale				
-					logMissingFile(id);			
-					//log the missing PNG file					
-					if (_replace_missing) {
+		private function processPNG(img:BitmapData, id:String, check_vs_default:Bool = false):Void
+		{
+			if (check_vs_default && _check_missing)
+			{
+				if (_index_images.exists(id) == false)
+				{
+					//image exists in default locale but not current locale
+					logMissingFile(id);
+					//log the missing PNG file
+					if (_replace_missing)
+					{
 						//replace with default locale version if necessary
 						_index_images.set(id, img);
 					}
 				}
-			}else {
+			}
+			else
+			{
 				//just store the image
 				_index_images.set(id, img);
 			}
 		}
 		
-		private function processFonts(xml:Fast):Void {
-			if(xml != null && xml.hasNode.data && xml.node.data.hasNode.font){
-				for (fontNode in xml.node.data.nodes.font) {
+		private function processFonts(xml:Fast):Void
+		{
+			if (xml != null && xml.hasNode.data && xml.node.data.hasNode.font)
+			{
+				for (fontNode in xml.node.data.nodes.font)
+				{
 					var value:String = fontNode.att.value;
 					_index_font.set(value, copyFast(fontNode));
 				}
@@ -1001,22 +1044,26 @@ package firetongue;
 		 * @param	hard Also clear all the index-related data, restoring it to a pre-initialized state.
 		 */
 		
-		private function clearData(hard:Bool=false):Void {
+		private function clearData(hard:Bool = false):Void
+		{
 			_callback_finished = null;
 			
-			if(_list_files != null){
-				while (_list_files.length > 0) {
+			if (_list_files != null)
+			{
+				while (_list_files.length > 0)
+				{
 					_list_files.pop();
 				}
 				_list_files = null;
 			}
 			
 			_loaded = false;
-			_files_loaded = 0;						
+			_files_loaded = 0;
 			
-			for (sub_key in _index_data.keys()) {				
+			for (sub_key in _index_data.keys()) 
+			{
 				var sub_index:Map<String,Dynamic> = _index_data.get(sub_key);
-				_index_data.remove(sub_key);				
+				_index_data.remove(sub_key);
 				clearMap(sub_index);
 				sub_index = null;
 			}
@@ -1027,7 +1074,8 @@ package firetongue;
 			_index_images = null;
 			_index_font = null;
 			
-			if (hard) {
+			if (hard)
+			{
 				clearMap(_index_locales);
 				clearBitmapDataMap(_index_icons);
 				clearMap(_index_notes);
@@ -1036,29 +1084,36 @@ package firetongue;
 				_index_notes = null;
 			}
 			
-			clearMap(_missing_flags);
-			if(_missing_files != null){
-				while (_missing_files.length > 0) {
-					_missing_files.pop();
+			clearMap(missing_flags);
+			if (missing_files != null)
+			{
+				while (missing_files.length > 0)
+				{
+					missing_files.pop();
 				}
 			}
 			
-			_missing_files = null;
-			_missing_flags = null;
+			missing_files = null;
+			missing_flags = null;
 		}
 		
-		private function clearBitmapDataMap(map:Map<String, BitmapData>):Void {
-			clearMap(map, function (bitmapData:BitmapData) {
-				if (bitmapData != null) bitmapData.dispose();
-			});
+		private function clearBitmapDataMap(map:Map<String, BitmapData>):Void
+		{
+			clearMap(map, function (bitmapData:BitmapData)
+				{
+					if (bitmapData != null) bitmapData.dispose();
+				});
 		}
 		
-		private function clearMap<T1, T2>(map:Map<T1, T2>, ?onRemove:T2->Void):Void {
+		private function clearMap<T1, T2>(map:Map<T1, T2>, ?onRemove:T2->Void):Void
+		{
 			if (map == null) return;
 			
-			for (key in map.keys()) {
+			for (key in map.keys())
+			{
 				var element = map.get(key);
-				if (onRemove != null) {
+				if (onRemove != null)
+				{
 					onRemove(element);
 				}
 				map.remove(key);
