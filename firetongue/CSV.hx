@@ -92,6 +92,12 @@ class CSV
 	{
 		if (_rgx == null)
 		{
+			//If the last cell in the row ends with the delimeter, trim it off before splitting
+			if (row.charAt(row.length - 1) == _delimeter)
+			{
+				row = row.substr(0, row.length - 1);
+			}
+			
 			if (_delimeter == ',')
 			{
 				_rgx = ~/,(?=(?:[^\x22]*\x22[^\x22]*\x22)*(?![^\x22]*\x22))/gm;
