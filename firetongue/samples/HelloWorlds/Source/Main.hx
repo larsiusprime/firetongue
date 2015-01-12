@@ -144,8 +144,10 @@ class Main extends Sprite {
 		text.text = "Could not find locale \"" + nonexistant + "\", closest match was:\n" + text.text;
 	}
 	
-	private function onFinish(context:String="data"):Void
+	private function onFinish():Void
 	{
+		var context = "data";
+		
 		text.text  = tongue.locale + "\n";
 		text.text += tongue.get("$INSTRUCTIONS",context) + "\n\n";
 		text.text += tongue.get("$HELLO_WORLD",context) + "\n";

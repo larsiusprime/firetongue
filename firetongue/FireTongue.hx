@@ -147,7 +147,8 @@ package firetongue;
 		 * @param	directory_ alternate directory to look for locale. Otherwise, is "assets/"
 		 */
 		
-		public function init(locale_:String, finished_:Dynamic=null, check_missing_:Bool=false, replace_missing_:Bool = false, directory_:String=""):Void{
+		public function init(locale_:String, finished_:Dynamic = null, check_missing_:Bool = false, replace_missing_:Bool = false, directory_:String = ""):Void
+		{
 			#if debug
 				trace("LocaleData.init(" + locale_ + "," + finished_ + "," + check_missing_ + "," + replace_missing_ +"," +directory_+")");
 			#end
@@ -512,21 +513,31 @@ package firetongue;
 		
 		private function loadImage(fname:String):BitmapData{
 			var img:BitmapData = null; 
-			try{
-				if(_directory == ""){
-					img = Assets.getBitmapData("assets/locales/" + fname);			
+			try
+			{
+				if (_directory == "")
+				{
+					img = Assets.getBitmapData("assets/locales/" + fname);
 				}else {
 					#if (cpp || neko)
-						if (FileSystem.exists(_directory + "locales/" + fname)) {
-							img = BitmapData.load(_directory + "locales/" + fname);
+						if (FileSystem.exists(_directory + "locales/" + fname))
+						{
+							#if lime_legacy
+								img = BitmapData.load(_directory + "locales/" + fname);
+							#else
+								img = BitmapData.fromFile(_directory + "locales/" + fname);
+							#end
 						}
 					#end
 				}	
-			}catch (e:Error) {
+			}
+			catch (e:Error)
+			{
 				#if debug
 					trace("ERROR: loadImage(" + fname + ") failed");
 				#end
-				if (_check_missing) {
+				if (_check_missing)
+				{
 					logMissingFile(fname);
 				}
 			}
@@ -889,7 +900,14 @@ package firetongue;
 				
 				if (_callback_finished != null)
 				{
-					_callback_finished();
+					try
+					{
+						_callback_finished();
+					}
+					catch (msg:String)
+					{
+						trace("ERROR msg = " + msg);
+					}
 				}
 			}
 		}
@@ -955,6 +973,11 @@ package firetongue;
 		
 		private function writeIndex(_index:Map<String,String>, flag:String, value:String, id:String, check_vs_default:Bool = false):Void
 		{
+			if (flag == null)
+			{
+				return;
+			}
+			
 			if (check_vs_default && _check_missing)
 			{
 				//flag exists in default locale but not current locale
