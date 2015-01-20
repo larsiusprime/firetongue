@@ -8,7 +8,6 @@
  "releasenote": "Pre-alpha release",
  "contributors": ["larsiusprime"],
  "dependencies": { 
-  "openfl": "",
-  "task":""
+  "openfl": ""
  }
 }
