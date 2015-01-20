@@ -25,8 +25,8 @@ package firetongue;
 
 import flash.display.Sprite;
 
-class Replace {
-
+class Replace
+{
 	/**
 	 * Simple class to do variable replacements for localization
 	 * 
@@ -45,20 +45,24 @@ class Replace {
 	 * specify where the variable should fall, and replace it accordingly. 
 	 */
 	
-	public function new () {		
+	public function new ()
+	{
+		//does nothing
 	}
 	
-	public static function flags(string:String,flags:Array<String>,values:Array<String>):String {
+	public static function flags(string:String, flags:Array<String>, values:Array<String>):String
+	{
 		var j:Int = 0;
-		while (j < flags.length) {
+		while (j < flags.length)
+		{
 			var flag = flags[j];
 			var value = values[j];
-			while (string.indexOf(flag) != -1) {
+			while (string.indexOf(flag) != -1)
+			{
 				string = StringTools.replace(string, flag, value);
 			}
 			j++;
 		}
 		return string;
 	}
-	
 }

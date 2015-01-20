@@ -7,7 +7,6 @@
 	<source path="Source" />
 	
 	<haxelib name="openfl" />
-	<haxelib name="task"/>
 	<haxelib name="firetongue"/>
 	
 	<assets path="Assets" rename="assets" exclude="*.svg" />

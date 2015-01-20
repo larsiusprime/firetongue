@@ -24,9 +24,10 @@
 package firetongue;
 
 /**
- * ...
+ * A simple CSV (comma separated values) structure
  * @author Lars Doucet
  */
+
 class CSV 
 {
 	public var fields:Array<String>;

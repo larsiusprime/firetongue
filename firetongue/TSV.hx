@@ -26,7 +26,7 @@ package firetongue;
 import firetongue.CSV;
 
 /**
- * ...
+ * A simple TSV (tab separated values) structure
  * @author Lars Doucet
  */
 
