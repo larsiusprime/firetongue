@@ -175,7 +175,8 @@ class FireTongue
 		{
 			str = index.get(flag);
 			
-			if(str != null && str != ""){
+			if (str != null && str != "")
+			{
 				//Replace standard stuff:
 				
 				if (str.indexOf("<RE>") == 0)					//it's a redirect
@@ -209,6 +210,36 @@ class FireTongue
 						{
 							done = true;
 							str = new_str;
+						}
+					}
+				}
+				
+				if (str.indexOf("<RE>[") != -1)			//it's a redirect in the middle of the flag with bracket notation
+				{
+					var done:Bool = false;
+					var failsafe:Int = 0;
+					while (!done)
+					{
+						var start:Int = str.indexOf("<RE>[");
+						var end:Int = str.lastIndexOf("]");
+						if (start != 1 && end != -1)				//redirection exists
+						{
+							var new_str = str.substring(start + 5, end);	//cut off the redirection and the brackets
+							new_str = index.get(new_str);						//look it up again
+							if (new_str == null || new_str == "")		//give up
+							{
+								done = true;
+							}
+							else if (new_str.indexOf("<RE>[") == -1)	//another redirect, keep going
+							{
+								done = true;
+							}
+							str = new_str;
+						}
+						failsafe++;
+						if (failsafe > 100)		//max recursion: 100
+						{
+							done = true;
 						}
 					}
 				}
@@ -765,10 +796,10 @@ class FireTongue
 				#if (cpp || neko)
 				if (FileSystem.exists(_directory + "locales/" + fname))
 				{
-					#if lime_legacy
-					img = BitmapData.load(_directory + "locales/" + fname);
+					#if (lime_legacy || hybrid)
+						img = BitmapData.load(_directory + "locales/" + fname);
 					#else
-					img = BitmapData.fromFile(_directory + "locales/" + fname);
+						img = BitmapData.fromFile(_directory + "locales/" + fname);
 					#end
 				}
 				#end
