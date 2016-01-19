@@ -162,7 +162,8 @@ class FireTongue
 		{
 			if (!safe)
 			{
-				throw new Error("no localization context \"+data+\"");
+				return flag;
+				//throw new Error("no localization context \"+data+\"");
 			}
 			else
 			{
@@ -177,9 +178,38 @@ class FireTongue
 			
 			if (str != null && str != "")
 			{
-				//Replace standard stuff:
+				while(str.indexOf("<RE>[") != -1)			//it's a redirect in the middle of the flag with bracket notation
+				{
+					var done:Bool = false;
+					var failsafe:Int = 0;
+					
+					var start:Int = str.indexOf("<RE>[");
+					var end:Int = str.indexOf("]");
+					
+					var flag = "";
+					var match = "";
+					
+					if (start != 1 && end != -1)				//redirection exists
+					{
+						match = str.substr(start, end + 1);
+						flag = str.substring(start + 5, end);	//cut off the redirection and the brackets
+						
+						if (flag == "" || flag == null)
+						{
+							break;
+						}
+						
+						var new_str = index.get(flag);					//look it up again
+						
+						if (new_str == null || new_str == "")		//give up
+						{
+							done = true;
+						}
+						str = StringTools.replace(str, match, new_str);
+					}
+				}
 				
-				if (str.indexOf("<RE>") == 0)					//it's a redirect
+				if (str.indexOf("<RE>") == 0 && str.indexOf("<RE>[") == -1)					//it's a whole-line redirect
 				{
 					var done:Bool = false;
 					var failsafe:Int = 0;
@@ -214,35 +244,7 @@ class FireTongue
 					}
 				}
 				
-				if (str.indexOf("<RE>[") != -1)			//it's a redirect in the middle of the flag with bracket notation
-				{
-					var done:Bool = false;
-					var failsafe:Int = 0;
-					while (!done)
-					{
-						var start:Int = str.indexOf("<RE>[");
-						var end:Int = str.lastIndexOf("]");
-						if (start != 1 && end != -1)				//redirection exists
-						{
-							var new_str = str.substring(start + 5, end);	//cut off the redirection and the brackets
-							new_str = index.get(new_str);						//look it up again
-							if (new_str == null || new_str == "")		//give up
-							{
-								done = true;
-							}
-							else if (new_str.indexOf("<RE>[") == -1)	//another redirect, keep going
-							{
-								done = true;
-							}
-							str = new_str;
-						}
-						failsafe++;
-						if (failsafe > 100)		//max recursion: 100
-						{
-							done = true;
-						}
-					}
-				}
+				//Replace standard stuff:
 				
 				var fix_a:Array<String> = ["<N>","<T>","<LQ>","<RQ>","<C>","<Q>"];
 				var fix_b:Array<String> = ["\n","\t","“","”",",",'"'];
