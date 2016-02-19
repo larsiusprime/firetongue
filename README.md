@@ -233,6 +233,47 @@ The "Replace" class lets you feed in an array of custom variable names that matc
 
 In this way, you can use the same invocation call to properly localize a variety of different languages with distinct grammar. As an additional tip, don't use code to create plurals, such as tacking on "s" on the end of things. Instead, create a separate locale flag for the plural version of something's name and leave that job to the translator. Because many languages have other rules like gender and case, the more you can leave the work up to the translator rather than your code, the better.
 
+**Redirect tokens**
+
+Sometimes you'll have a lot of repeated words or phrases in your localizations, but you still want to have unique flags for each entry because different languages might have different homonyms. For example, English has the words "Meat" and "Flesh", but German only has the word "Fleisch" for both of those.
+
+en-US:
+```
+$MEAT	meat
+$FLESH	flesh
+```
+
+de-DE:
+```
+$MEAT	Fleisch
+$FLESH	Fleisch
+```
+
+This can build up to a lot of repetition over time. So, you can use redirect flags to make firetongue use the same entry in more than one place:
+
+```
+$MEAT	Fleisch
+$FLESH	<RE>$MEAT
+```
+
+This way the translator only needs to enter the word "fleisch" once and it will return correctly when either the `$MEAT` or `$FLESH` flag is requested. This cuts down on duplication errors.
+
+The `<RE>$FLAG` syntax will redirect the *entire entry*, and only works if the cell begins with `<RE>` followed by a valid localization flag (no whitespace in between) and nothing else after.
+
+There is an alternate syntax if you want to use redirection to apply to only part of an entry:
+
+en-US:
+```
+$GOBLIN	goblin
+$ANGRY_GOBLIN angry <RE>[$GOBLIN]
+$CRAZY_GOBLIN crazy <RE>[$GOBLIN]
+$UGLY_GOBLIN ugly <RE>[$GOBLIN]
+```
+
+In this example `$ANGRY_GOBLIN` will return `angry goblin`. Again, don't try to be too clever with this, just use it to cut down on basic copy & paste tedium. I've found it's quite useful for frequently repeated large blocks of text, like enemy descriptions that are shared by multiple enemy types.
+
+For this syntax to work, a cell must contain the `<RE>` token, immediately followed by a square-bracketed valid localization flag, like this: `[$SOME_FLAG]`. The entire `<RE>[$SOME_FLAG]` string will be replaced by the redirected text. You can have multiple of these in a single cell.
+
 **Font replacement**
 
 By itself, Firetongue doesn't really deal with fonts - properly loading them and using them is up to you. However, you can use FireTongue to create font replacement **rules**, which you can then look up at runtime while you are building interfaces or something, and use this to swap out both fonts and font sizes at the last minute. 
