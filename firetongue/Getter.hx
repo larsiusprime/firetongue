@@ -172,7 +172,6 @@ class Getter
 	
 	private function limitPath(arr:Array<String>, path:String):Array<String>
 	{
-		trace("limitpath(" + arr + "," + path + ")");
 		var arr2 = [];
 		
 		path = StringTools.replace(path, "\\", "/");

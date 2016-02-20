@@ -646,36 +646,30 @@ class FireTongue
 	private function findClosestExistingLocale(localeStr:String,testFile:String):String
 	{
 		var paths:Array<String> = null;
-		var dirpath:String = "";
 		var bestLocale:String = "";
 		var bestDiff:Float = Math.POSITIVE_INFINITY;
 		
-		#if (sys)
-		dirpath = "assets/locales";
-		#elseif flash
-		dirpath = "assets/locales/";
-		#end
+		paths = getDirectoryContents("");
 		
-		#if debug
-		trace("--> looking in: " + dirpath);
-		#end
-		
-		paths = getDirectoryContents(dirpath);
+		trace("paths = " + paths);
 		
 		if (paths != null)
 		{
 			var localeCandidates:Array<String> = [];
 			
 			for (str in paths) {
-				str = StringTools.replace(str, dirpath, "");
-				var newLocale:String = "";
-				#if flash
-				if (str.indexOf("/") != -1) {
-					newLocale = str.substr(0, str.indexOf("/"));
+				trace("str = " + str);
+				var newLocale:String = StringTools.replace(str, _directory, "");
+				newLocale = StringTools.replace(newLocale, "\\", "/");
+				var split:Array<String> = newLocale.split("/");
+				if (split != null && split.length > 0)
+				{
+					newLocale = split[0];
+					if (false == (newLocale.length == 5 && newLocale.charAt(2) == "-")) {
+						newLocale = "";
+					}
 				}
-				#elseif(cpp || neko)
-				newLocale = str;
-				#end
+				trace("newLocale = " + newLocale);
 				if(newLocale.indexOf("_") != 0 && newLocale.indexOf(".") == -1){
 					if (localeCandidates.indexOf(newLocale) == -1)
 					{
@@ -692,7 +686,7 @@ class FireTongue
 			bestDiff = Math.POSITIVE_INFINITY;
 			
 			for (loc in localeCandidates) {
-				var diff:Int = stringDiff(localeStr, loc, false);
+				var diff = stringDiff(localeStr, loc, false);
 				if (diff < bestDiff) {
 					bestDiff = diff;
 					bestLocale = loc;
@@ -1189,9 +1183,12 @@ class FireTongue
 		}
 	}
 	
-	private function stringDiff(a:String, b:String, caseSensitive:Bool = true):Int
+	private function stringDiff(a:String, b:String, caseSensitive:Bool = true):Float
 	{
 		var totalDiff:Int = 0;
+		
+		if (a != "" && b == "") return Math.POSITIVE_INFINITY;
+		
 		if (caseSensitive == false)
 		{
 			a = a.toLowerCase();
