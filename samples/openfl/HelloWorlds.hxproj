@@ -15,21 +15,21 @@
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
-    <class path="T:\Development\Git\lime" />
-    <class path="T:\Development\Git\firetongue" />
-    <class path="C:\HaxeToolkit\haxe\lib\task\1,0,6" />
-    <class path="T:\Development\Git\openfl" />
+    <class path="T:\git\lime" />
+    <class path="T:\git\firetongue" />
+    <class path="T:\git\openfl" />
     <class path="Source" />
-    <class path="Export\flash\haxe" />
+    <class path="T:\git\openfl\extern" />
+    <class path="Export\html5\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="lime=2.0.4&#xA;firetongue=0.0.1&#xA;task=1.0.6&#xA;openfl=2.1.6&#xA;tools=2.0.4&#xA;no-compilation&#xA;openfl-flash&#xA;web" />
+    <option directives="lime=2.9.0&#xA;firetongue=0.0.1&#xA;openfl=3.6.0&#xA;openfl-next&#xA;tools=2.9.0&#xA;no-compilation&#xA;openfl-html5&#xA;canvas&#xA;lime-html5&#xA;html5&#xA;web&#xA;html5&#xA;display" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
-    <option additional="-swf-version 11.2&#xA;-debug " />
+    <option additional="--remap flash:openfl&#xA;--macro allowPackage(&quot;flash&quot;)&#xA;-debug " />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
