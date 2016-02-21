@@ -233,6 +233,41 @@ The "Replace" class lets you feed in an array of custom variable names that matc
 
 In this way, you can use the same invocation call to properly localize a variety of different languages with distinct grammar. As an additional tip, don't use code to create plurals, such as tacking on "s" on the end of things. Instead, create a separate locale flag for the plural version of something's name and leave that job to the translator. Because many languages have other rules like gender and case, the more you can leave the work up to the translator rather than your code, the better.
 
+As a further example, consider a scenario where you want to print something like this:
+
+    "1 red fish"
+    "2 blue fish"
+    
+You should *not* do it like this:
+
+```haxe
+string = count + color + noun;
+```
+
+Here we've got an unknown number and an unknown adjective, both of which could change how the noun appears in various different languages, and this doesn't even consider gender, case, and other messy issues with declention. Trying to account for all this complexity in code is madness, so a smarter approach might be to use the code to generate localization flag *permutations.* 
+
+For instance -- if count, colors and nouns are chosen from a known set, then you could set up localization flags like this:
+
+    $1_RED_FISH	1 red fish
+    $2_RED_FISH	2 red fish
+    $1_BLUE_FISH	1 blue fish
+    $2_BLUE_FISH	2 blue fish
+    $1_RED_CAT	1 red cat
+    $2_RED_CAT	2 red cats
+    $1_BLUE_CAT	1 blue cat
+    $2_BLUE_CAT	2 blue cats
+    
+And construct your get call like this:
+
+```haxe
+flag = "$"+count+"_"+color+"_"+noun;
+string = ft.get(flag);
+```
+
+As you can see above, even in English the word "cat" differs from "fish" in how the plural case should be treated. A system like this allows you to offload the complexity of word interaction and sentence structure to your translator, as it should be.
+
+As a final note, Firetongue is not magic and is not a replacement for foresight and careful design. Consider MySQL -- it's a powerful tool to store & look up database information, but you still have to carefully design your database schema yourself. Firetongue is the same way -- it has tools to enable advanced workflows with flexibility for the widest possibility of languages, but ultimately getting those details right for your project and languages is up to you.
+
 **Redirect tokens**
 
 Sometimes you'll have a lot of repeated words or phrases in your localizations, but you still want to have unique flags for each entry because different languages might have different homonyms. For example, English has the words "Meat" and "Flesh", but German only has the word "Fleisch" for both of those.
