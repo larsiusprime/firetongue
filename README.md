@@ -25,14 +25,27 @@ Although the included samples uses OpenFL, Firetongue works with any Haxe framew
 
 Usage
 --
-    var tongue:FireTongue = new FireTongue();
-    tongue.init("en-US",onLoaded);
 
+First, create a new firetongue instance:
+
+```haxe
+    var tongue:FireTongue = new FireTongue();
+```
+
+Passing no parameters to the Firetongue constructor will make it try to guess your framework for the purpose of loading your files, but you can specify the framework yourself, and/or provide your own loading functions in the Firetongue constructor.
+
+Then, initialize it with your chosen locale and a callback:
+```
+    tongue.init("en-US",onLoaded);
+   
+    ...
+    
     function onLoaded():Void{
         trace(tongue.get("$HELLO_WORLD","data"));  
         //outputs "Hello, World!" 
         //(which is stored in the flag $HELLO_WORD in a file indexed by context id "data")
     }
+```
 
 Of course, this assumes that you've done the proper setup.
 
