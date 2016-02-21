@@ -181,7 +181,7 @@ But I wouldn't push it. Use these characters instead of quotes if you can: â€œ â
 
 FireTongue will automatically look for those characters and replace them on the fly. This is way easier than trying to get the parser to not choke on a cell with tons of standard commas, quotation marks, and line breaks inside of it.
 
-Finally, all firetongue TSV/CSV files MUST begin with two header fields -- "flag" and "content", like this:
+Finally, all firetongue TSV/CSV files should begin with just two header fields -- "flag" and "content", like this:
 
 TSV:
 
@@ -193,6 +193,24 @@ CSV:
 
 ```csv
     "flag","content"
+```
+
+Alternately, if you supply more than one content column the field names will be treated as as automatic suffixes appended to the root flag.
+
+i.e, this:
+
+```tsv
+    flag	name	description	effect
+    $POTION	potion	a green potion	heals 15 HP
+```
+
+...is equivalent to this:
+
+```tsv
+    flag	content
+    $POTION_NAME	potion
+    $POTION_DESCRIPTION	a green potion
+    $POTION_EFFECT	heals 15 HP
 ```
 
 
