@@ -422,7 +422,29 @@ These particular localization metadata values are specified in index.xml rather 
 
 By itself, Firetongue doesn't really deal with fonts - properly loading them and using them is up to you. However, you can use FireTongue to create font replacement **rules**, which you can then look up at runtime while you are building interfaces or something, and use this to swap out both fonts and font sizes at the last minute. 
 
-(More documentation to follow).
+Your fonts.xml file should look something like this:
+
+````xml
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<font value="verdana" replace="arial">
+	    <size value="12" replace="14"/>
+	    <size value="13" replace="16"/>
+	</font>
+</data>
+````
+
+Then at runtime you can call:
+
+```haxe
+var oldfont = "verdana";
+var newfont = tongue.getFont(oldfont);  //returns "comicsans"
+
+var oldsize = 12;
+var newsize = tongue.getFontSize(oldsize); //returns 14
+```
+
+You would most likely want to integrate this with a user interface library. In practice this can be used to make, say, German text smaller by default, or to put in a different font for cyrillic text with Russian, support asian font sets, etc.
 
 **Flixel-UI integration**
 
