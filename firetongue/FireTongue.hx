@@ -1276,6 +1276,7 @@ enum Framework
 	VanillaSys;
 	OpenFL;
 	Lime;
+	NME;
 	Custom;
 	//add more frameworks as they are supported ... maybe?
 }
