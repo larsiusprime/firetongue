@@ -35,7 +35,7 @@ First, create a new firetongue instance:
 Passing no parameters to the Firetongue constructor will make it try to guess your framework for the purpose of loading your files, but you can specify the framework yourself, and/or provide your own loading functions in the Firetongue constructor.
 
 Then, initialize it with your chosen locale and a callback:
-```
+```haxe
     tongue.init("en-US",onLoaded);
    
     ...
@@ -70,7 +70,7 @@ The **_index.xml** file contains details about your localization setup, and the 
 
 Notably, at the beginning of your index.xml you should list the files you are loading:
 
-````
+````xml
 <file id="data" value="data.tsv"/>
 <file id="data" value="more_data.tsv"/>
 <file id="other" value="other_data.tsv"/> 
@@ -95,6 +95,7 @@ Provide as many tsv files as you like, as well as a fonts.xml file. The TSV file
 
 Here's the en-US version of the sample projects's data.tsv file:
 
+```tsv
     flag	content
     $INSTRUCTIONS	Click a flag to load text from that locale.<N>Several files are intentionally missing from various locales.<N>This showcases the <LQ>missing file check<RQ> feature.	
     $HELLO_WORLD	Hello, World!	
@@ -103,12 +104,14 @@ Here's the en-US version of the sample projects's data.tsv file:
     $MISSING_FILES	<X> localization files are missing:	
     $ANOTHER_STRING	Another string	
     $MORE_STRINGS	More strings	
-    $LOOK_MORE_STRINGS	Look, even more strings!	
+    $LOOK_MORE_STRINGS	Look, even more strings!
+```
 
 (Note that each cell ends with a TAB character, and each line ends with a TAB and then an endline)
 
 CSV format is also allowed, which would look like this:
 
+```csv
     "flag","content",
     "$INSTRUCTIONS","Click a flag to load text from that locale.<N>Several files are intentionally missing from various locales.<N>This showcases the <LQ>missing file check<RQ> feature.",
     "$HELLO_WORLD","Hello, World!",
@@ -118,6 +121,7 @@ CSV format is also allowed, which would look like this:
     "$ANOTHER_STRING","Another string",
     "$MORE_STRINGS","More strings",
     "$LOOK_MORE_STRINGS","Look, even more strings!",
+```
 
 This creates a database of localization information, pairing "flags" with values. Instead of putting hard-coded text directly into your application code, you instead put a localization flag, like "$INSTRUCTIONS". Then, right before the text is displayed, you run FireTongue.get() and pass in your flag to get the localized string in the current locale. 
 
@@ -162,7 +166,9 @@ All that said, a specific CSV file format is also supported.
 
 If you follow the above rules, you should be able to put just about anything inside of your translation strings and FireTongue will be able to parse it correctly, including commas! FireTongue is *supposed* to be smart enough to handle situations like this:
 
+```csv
     "$EVIL_STRING","I will break it with commas, and "quotation marks" !!!",
+```
 
 But I wouldn't push it. Use these characters instead of quotes if you can: “ ”, or else use one of firetongue's special replacement characters to deal with these situations:
 
@@ -179,11 +185,15 @@ Finally, all firetongue TSV/CSV files MUST begin with two header fields -- "flag
 
 TSV:
 
-    flag	content	
+```tsv
+    flag	content
+```
     
 CSV:
 
-    "flag","content",
+```csv
+    "flag","content"
+```
 
 
 ####Exporting TSV files from Excel
@@ -225,24 +235,32 @@ Here's some fancy other things you can do with FireTongue:
 
 Sometimes you want to print out a dynamic phrase, like, "Collect X apples!" where X could be 15, 20, anything. Usually, people do something like this:
 
+```haxe
     str = "Collect " + num_apples + " apples!";
+```
 
 This is a big no-no, because you're encoding grammar in the least flexibile part of your system, the code itself. Not only do words themselves change in different languages, but also grammar, word order, and sentence structure. For example, in ["Yoda-ish"](http://www.yodaspeak.co.uk/), that sentence would be "X apples, collect you must! Yeeeessss!" 
 
 To avoid this, you let the translator specify where the variable should fall in the sentence. So in en-US it would be:
 
-    $COLLECT_X_APPLES	Collect <X> apples!	
+```tsv
+    $COLLECT_X_APPLES	Collect <X> apples!
+```
 
 But in yo-DA (the fictional locale name for Dagoban Yoda-ish)
 
+```tsv
     $COLLECT_X_APPLES	<X> apples, collect you must! Yeeeessss!	
+```
 
 So here's how you would handle this with firetongue:
 
+```haxe
     import firetongue.Replace;
 
     str = fire_tongue_instance.get("$COLLECT_X_APPLES");
     str = Replace.flags(str,["<X>"],[Std.string(num_apples)]);
+```
 
 The "Replace" class lets you feed in an array of custom variable names that match what's in the translation string, as well as an array of corresponding replacement values. 
 
@@ -263,6 +281,7 @@ Here we've got an unknown number and an unknown adjective, both of which could c
 
 For instance -- if count, colors and nouns are chosen from a known set, then you could set up localization flags like this:
 
+```tsv
     $1_RED_FISH	1 red fish
     $2_RED_FISH	2 red fish
     $1_BLUE_FISH	1 blue fish
@@ -271,7 +290,8 @@ For instance -- if count, colors and nouns are chosen from a known set, then you
     $2_RED_CAT	2 red cats
     $1_BLUE_CAT	1 blue cat
     $2_BLUE_CAT	2 blue cats
-    
+```
+
 And construct your get call like this:
 
 ```haxe
@@ -288,20 +308,20 @@ As a final note, Firetongue is not magic and is not a replacement for foresight 
 Sometimes you'll have a lot of repeated words or phrases in your localizations, but you still want to have unique flags for each entry because different languages might have different homonyms. For example, English has the words "Meat" and "Flesh", but German only has the word "Fleisch" for both of those.
 
 en-US:
-```
+```tsv
 $MEAT	meat
 $FLESH	flesh
 ```
 
 de-DE:
-```
+```tsv
 $MEAT	Fleisch
 $FLESH	Fleisch
 ```
 
 This can build up to a lot of repetition over time. So, you can use redirect flags to make firetongue use the same entry in more than one place:
 
-```
+```tsv
 $MEAT	Fleisch
 $FLESH	<RE>$MEAT
 ```
@@ -313,7 +333,7 @@ The `<RE>$FLAG` syntax will redirect the *entire entry*, and only works if the c
 There is an alternate syntax if you want to use redirection to apply to only part of an entry:
 
 en-US:
-```
+```tsv
 $GOBLIN	goblin
 $ANGRY_GOBLIN angry <RE>[$GOBLIN]
 $CRAZY_GOBLIN crazy <RE>[$GOBLIN]
@@ -418,6 +438,7 @@ If firetongue can't find a file on a get() call, it will by default return that 
 
 When you load your files, you can tell FireTongue to check for missing files and flags:
 
+```haxe
     public function init(
         locale_:String,        
         finished_:Dynamic=null, 
@@ -425,6 +446,7 @@ When you load your files, you can tell FireTongue to check for missing files and
         replace_missing_:Bool = false, 
         directory_:String=""
     ):Void{
+```
 		
 *Check Missing*:
 
