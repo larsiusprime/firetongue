@@ -9,69 +9,78 @@ import firetongue.FireTongue.Framework;
 class Getter
 {
 	private var framework:Framework;
-	private var checkFile_Other:String->Bool;
-	private var getText_Other:String->String;
-	private var getDirectoryContents_Other:String->Array<String>;
+	private var checkFile_Custom:String->Bool;
+	private var getText_Custom:String->String;
+	private var getDirectoryContents_Custom:String->Array<String>;
 	
-	public function new(?framework_:Framework, checkFile:String->Bool, getText:String->String=null, getDirectoryContents:String->Array<String>=null) 
+	public function new(?framework_:Framework, checkFile_:String->Bool, getText_:String->String=null, getDirectoryContents_:String->Array<String>=null) 
 	{
 		if (framework_ == null)
 		{
-			#if sys
-				framework = VanillaSys;
-			#elseif openfl
+			#if openfl
 				framework = OpenFL;
 			#elseif lime
 				framework = Lime;
+			#elseif sys
+				framework = VanillaSys;
 			#else
-				framework = Other;
+				framework = Custom;
 			#end
 		}
+		else {
+			framework = framework_;
+		}
 		
-		checkFile_Other = checkFile;
-		getText_Other = getText;
-		getDirectoryContents_Other = getDirectoryContents;
+		checkFile_Custom = checkFile_;
+		getText_Custom = getText_;
+		getDirectoryContents_Custom = getDirectoryContents_;
 	}
 	
 	public function destroy()
 	{
-		getText_Other = null;
-		getDirectoryContents_Other = null;
+		checkFile_Custom = null;
+		getText_Custom = null;
+		getDirectoryContents_Custom = null;
 	}
 	
 	public function checkFile(filename:String):Bool
 	{
+		if (checkFile_Custom != null)
+		{
+			return checkFile_Custom(filename);
+		}
 		return switch(framework)
 		{
-			case Lime:       checkFile_Lime(filename);
-			case OpenFL:     checkFile_OpenFL(filename);
-			case VanillaSys: checkFile_VanillaSys(filename);
-			case Other:      checkFile_Other != null ? checkFile_Other(filename) : false;
+			case Lime, OpenFL: checkFile_Lime(filename);
+			case VanillaSys:   checkFile_VanillaSys(filename);
 			default: false;
 		}
 	}
 	
 	public function getText(filename:String):String
 	{
+		if (getText_Custom != null)
+		{
+			return getText_Custom(filename);
+		}
 		return switch(framework)
 		{
-			case Lime:       getText_Lime(filename);
-			case OpenFL:     getText_OpenFL(filename);
-			case VanillaSys: getText_VanillaSys(filename);
-			case Other:      getText_Other != null ? getText_Other(filename) : null;
+			case Lime, OpenFL: getText_Lime(filename);
+			case VanillaSys:   getText_VanillaSys(filename);
 			default: null;
 		}
 	}
 	
 	public function getDirectoryContents(path:String):Array<String>
 	{
-		trace("getDirectoryContents(" + path+")");
+		if (getDirectoryContents_Custom != null)
+		{
+			return getDirectoryContents_Custom(path);
+		}
 		return switch(framework)
 		{
-			case Lime:       getDirectoryContents_Lime(path);
-			case OpenFL:     getDirectoryContents_OpenFL(path);
-			case VanillaSys: getDirectoryContents_VanillaSys(path);
-			case Other:      getDirectoryContents_Other != null ? getDirectoryContents_Other(path) : [];
+			case Lime, OpenFL: getDirectoryContents_Lime(path);
+			case VanillaSys:   getDirectoryContents_VanillaSys(path);
 			default: [];
 		}
 	}
@@ -100,35 +109,6 @@ class Getter
 	{
 		#if lime
 			return lime.Assets.exists(filename);
-		#else
-			return false;
-		#end
-	}
-	
-	/*******OpenFL*******/
-	
-	public function getDirectoryContents_OpenFL(path:String):Array<String>
-	{
-		#if openfl
-			return limitPath(openfl.Assets.list(TEXT), path);
-		#else
-			return null;
-		#end
-	}
-	
-	public function getText_OpenFL(filename:String):String
-	{
-		#if openfl
-			return openfl.Assets.getText(filename);
-		#else
-			return null;
-		#end
-	}
-	
-	public function checkFile_OpenFL(filename:String):Bool
-	{
-		#if lime
-			return openfl.Assets.exists(filename);
 		#else
 			return false;
 		#end
