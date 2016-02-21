@@ -36,6 +36,7 @@ import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import firetongue.FireTongue;
 import firetongue.Replace;
+import openfl.Assets;
 import openfl.display.Shape;
 
 class Main extends Sprite {
@@ -60,7 +61,10 @@ class Main extends Sprite {
 		text.y = (600 - text.height) / 2;
 		addChild(text);
 		
-		tongue = new FireTongue();
+		tongue = new FireTongue();							//firetongue will try to automatically detect a framework, in this case, OpenFL
+		//tongue = new FireTongue(Framework.OpenFL);		//explicitly request OpenFL asset loading (works on native, flash, & HTML5 targets)
+		//tongue = new FireTongue(Framework.VanillaSys);	//use sys.io.File and sys.Filesystem (works w/ any framework, but not on flash & HTML5 targets)
+		
 		tongue.init("en-US", onFinish, true);
 		
 		locales = tongue.locales;
@@ -71,7 +75,7 @@ class Main extends Sprite {
 		var lasty:Float = 0;
 		for (locale in locales)
 		{
-			var img = tongue.getIcon(locale);
+			var img = Assets.getBitmapData(tongue.getIcon(locale));
 			
 			var img2:BitmapData = new BitmapData(img.width * 3, img.height * 3, false, 0xff000000);
 			var matrix:Matrix = new Matrix();
@@ -84,41 +88,46 @@ class Main extends Sprite {
 			img3.draw(img2, null, new ColorTransform(1, 1, 1, 1, 64, 64, 64, 0));
 			var over:Bitmap = new Bitmap(img3);
 			var down:Bitmap = new Bitmap(img2);
-			var hit:Bitmap = new Bitmap(img2);
 			
-			var sb:SimpleButton = new SimpleButton(up, over, down, hit);
+			var mb = new MyButton(up, over, down);
 			
-			sb.y = 4;
-			sb.x = xx + 4;
-			xx += (sb.width + 4);
+			mb.y = 4;
+			mb.x = xx + 4;
+			xx += (mb.width + 4);
 			
-			sb.name = "Locale" + i;
+			mb.name = "Locale" + i;
 			
-			addChild(sb);
-			sb.addEventListener(MouseEvent.CLICK, onClick);
+			addChild(mb);
+			mb.addEventListener(MouseEvent.CLICK, onClick);
 			i++;
 			
-			lastx = sb.x + sb.width + 4;
-			lasty = sb.y;
+			lastx = mb.x + mb.width + 4;
+			lasty = mb.y;
 		}
 		
 		var xgraphic:Shape = new Shape();
+		xgraphic.graphics.beginFill(0xFF0000);
+		xgraphic.graphics.drawRect(0, 0, 48, 33);
 		xgraphic.graphics.lineStyle(3, 0x000000);
 		xgraphic.graphics.moveTo(0, 0);
 		xgraphic.graphics.lineTo(48, 33);
 		xgraphic.graphics.moveTo(48, 0);
 		xgraphic.graphics.lineTo(0, 33);
 		
-		var xbmpdata:BitmapData = new BitmapData(48, 33, false, 0xffff0000);
-		var xbmp:Bitmap = new Bitmap(xbmpdata);
+		var xgraphic2:Shape = new Shape();
+		xgraphic2.graphics.beginFill(0xFF8080);
+		xgraphic2.graphics.drawRect(0, 0, 48, 33);
+		xgraphic2.graphics.lineStyle(3, 0x808080);
+		xgraphic2.graphics.moveTo(0, 0);
+		xgraphic2.graphics.lineTo(48, 33);
+		xgraphic2.graphics.moveTo(48, 0);
+		xgraphic2.graphics.lineTo(0, 33);
 		
-		xbmpdata.draw(xgraphic);
-		
-		var sb2:SimpleButton = new SimpleButton(xbmp, xbmp, xbmp, xbmp);
-		addChild(sb2);
-		sb2.x = lastx;
-		sb2.y = lasty;
-		sb2.addEventListener(MouseEvent.CLICK, onClick2);
+		var mb2 = new MyButton(xgraphic, xgraphic2, null);
+		addChild(mb2);
+		mb2.x = lastx;
+		mb2.y = lasty;
+		mb2.addEventListener(MouseEvent.CLICK, onClick2);
 	}
 	
 	private function onClick2(e:MouseEvent):Void
@@ -128,8 +137,7 @@ class Main extends Sprite {
 	
 	private function onClick(e:MouseEvent):Void
 	{
-		var i = Std.parseInt (cast (e.currentTarget, SimpleButton).name.charAt (6));
-		trace("onClick(" + i + ")");
+		var i = Std.parseInt (cast (e.currentTarget, Sprite).name.charAt (6));
 		var locale:String = "";
 		if (i >= 0 && i < locales.length)
 		{
@@ -153,33 +161,33 @@ class Main extends Sprite {
 		text.text += tongue.get("$HELLO_WORLD",context) + "\n";
 		text.text += tongue.get("$TEST_STRING",context) + "\n";
 		
-		if (tongue.missing_files != null)
+		if (tongue.missingFiles != null)
 		{
-			var str:String = tongue.get("$MISSING_FILES",context);
-			str = Replace.flags(str, ["<X>"], [Std.string(tongue.missing_files.length)]);
+			var str:String = tongue.get("$missingFiles",context);
+			str = Replace.flags(str, ["<X>"], [Std.string(tongue.missingFiles.length)]);
 			text.text += str + "\n";
-			for (file in tongue.missing_files)
+			for (file in tongue.missingFiles)
 			{
-				text.text += "\t" + file + "\n";
+				text.text += "    " + file + "\n";
 			}
 		}
 		
-		if (tongue.missing_flags != null)
+		if (tongue.missingFlags != null)
 		{
-			var missing_flags = tongue.missing_flags;
+			var missingFlags = tongue.missingFlags;
 			
-			var miss_str:String = tongue.get("$MISSING_FLAGS",context);
+			var miss_str:String = tongue.get("$missingFlags",context);
 			
 			var count:Int = 0;
 			var flag_str:String = "";
 			
-			for (key in missing_flags.keys())
+			for (key in missingFlags.keys())
 			{
-				var list:Array<String> = missing_flags.get(key);
+				var list:Array<String> = missingFlags.get(key);
 				count += list.length;
 				for (flag in list)
 				{
-					flag_str += "\tContext("+key+"): " + flag + "\n";
+					flag_str += "    Context("+key+"): " + flag + "\n";
 				}
 			}
 			
