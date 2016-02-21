@@ -21,6 +21,8 @@ class Getter
 				framework = OpenFL;
 			#elseif lime
 				framework = Lime;
+			#elseif nme
+				framework = NME;
 			#elseif sys
 				framework = VanillaSys;
 			#else
@@ -109,6 +111,35 @@ class Getter
 	{
 		#if lime
 			return lime.Assets.exists(filename);
+		#else
+			return false;
+		#end
+	}
+	
+	/*******NME*******/
+	
+	public function getDirectoryContents_NME(path):Array<String>
+	{
+		#if nme
+			return limitPath(nme.Assets.list(TEXT), path);
+		#else
+			return null;
+		#end
+	}
+	
+	public function getText_NME(filename:String):String
+	{
+		#if nme
+			return nme.Assets.getText(filename);
+		#else
+			return null;
+		#end
+	}
+	
+	public function checkFile_NME(filename:String):Bool
+	{
+		#if nme
+			return nme.Assets.exists(filename);
 		#else
 			return false;
 		#end
