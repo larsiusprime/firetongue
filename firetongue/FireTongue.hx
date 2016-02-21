@@ -24,7 +24,6 @@
 package firetongue;
 
 import firetongue.FireTongue.LoadTask;
-import haxe.EnumTools;
 import haxe.xml.Fast;
 
 #if (sys)
