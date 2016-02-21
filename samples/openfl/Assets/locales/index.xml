@@ -11,7 +11,7 @@
 	<file id="fonts" value="fonts.xml"/>
 	
 	
-	<!--Add locale entries here. 
+	<!--Add locale entries here.
 	
 	The locale id is the ISO 639-1 country language code with 2-letter country suffix:
 	http://en.wikipedia.org/wiki/ISO_639-1
@@ -27,30 +27,30 @@
 	<locale id="en-US" is_default="true" sort="0">	
 		<contributors value="Lars Doucet, Level Up Labs"/>
 		<ui language="Language" region="Region" accept="Okay" />
-		<label id="en-US,en-GB,en-CA" language="English" region="United States"/>	
-        <label id="nb-NO" language="Engelsk" region="U.S.A."/>
-    </locale>    
+		<label id="en-US,en-GB,en-CA" language="English" region="United States"/>
+		<label id="nb-NO" language="Engelsk" region="U.S.A."/>
+	</locale>
 	
 	<!--British English-->
-    <locale id="en-GB" sort="1"> 
-        <ui language="Language" region="Region"/>        
-        <label id="en-US,en-GB,en-CA,yo-DA" language="English" region="Great Britain"/>
-        <label id="nb-NO" language="Engelsk" region="Stor-Britannia"/>
-    </locale>
+	<locale id="en-GB" sort="1"> 
+		<ui language="Language" region="Region"/>
+		<label id="en-US,en-GB,en-CA,yo-DA" language="English" region="Great Britain"/>
+		<label id="nb-NO" language="Engelsk" region="Stor-Britannia"/>
+	</locale>
 	
 	<!--Canadian English-->
-    <locale id="en-CA" sort="2">
-        <ui language="Language" region="Region"/>        
-        <label id="en-US,en-GB,en-CA,yo-DA" language="English" region="Canada"/>
-        <label id="nb-NO" language="Engelsk" region="Canada"/>
-    </locale>
-    
+	<locale id="en-CA" sort="2">
+		<ui language="Language" region="Region"/>
+		<label id="en-US,en-GB,en-CA,yo-DA" language="English" region="Canada"/>
+		<label id="nb-NO" language="Engelsk" region="Canada"/>
+	</locale>
+	
 	<!--Norwegian Bokmål-->
-    <locale id="nb-NO" sort="6">
-        <ui language="Språk" region="Område"/>                
-        <label id="en-US,en-GB,en-CA,yo-DA" language="Norwegian" region="Norway (Bokmål)"/>
-        <label id="nb-NO" language="Norsk" region="Norge (Bokmål)"/>
-    </locale>
+	<locale id="nb-NO" sort="6">
+		<ui language="Språk" region="Område"/>
+		<label id="en-US,en-GB,en-CA,yo-DA" language="Norwegian" region="Norway (Bokmål)"/>
+		<label id="nb-NO" language="Norsk" region="Norge (Bokmål)"/>
+	</locale>
 	
 	<!--Dagoban Yoda-ish-->
 	<locale id="yo-DA" sort="7">
@@ -64,8 +64,8 @@
 	in text files, to avoid the boot-strapping problem of having to load a locale in order
 	to display locale interface text in that locale.
 	
-	The note will always display in the currently selected locale as a tooltip over various
-	translations.
+	A good practice is that this note should always display in the currently selected locale as
+	a tooltip over various translations.
 	-->
 	
 	<note id="beta">
