@@ -76,7 +76,9 @@ class Getter
 		}
 		return switch(framework)
 		{
-			case Lime, OpenFL: checkFile_Lime(filename);
+			case OpenFL:       checkFile_OpenFL(filename);
+			case Lime:         checkFile_Lime(filename);
+			case NME:          checkFile_NME(filename);
 			case VanillaSys:   checkFile_VanillaSys(filename);
 			default: false;
 		}
@@ -90,7 +92,9 @@ class Getter
 		}
 		return switch(framework)
 		{
-			case Lime, OpenFL: getText_Lime(filename);
+			case OpenFL:       getText_OpenFL(filename);
+			case Lime:         getText_Lime(filename);
+			case NME:          getText_NME(filename);
 			case VanillaSys:   getText_VanillaSys(filename);
 			default: null;
 		}
@@ -104,10 +108,41 @@ class Getter
 		}
 		return switch(framework)
 		{
-			case Lime, OpenFL: getDirectoryContents_Lime(path);
+			case OpenFL:       getDirectoryContents_OpenFL(path);
+			case Lime:         getDirectoryContents_Lime(path);
+			case NME:          getDirectoryContents_NME(path);
 			case VanillaSys:   getDirectoryContents_VanillaSys(path);
 			default: [];
 		}
+	}
+	
+	/*******OpenFL*******/
+	
+	public function getDirectoryContents_OpenFL(path):Array<String>
+	{
+		#if openfl
+			return limitPath(openfl.Assets.list(TEXT), path);
+		#else
+			return null;
+		#end
+	}
+	
+	public function getText_OpenFL(filename:String):String
+	{
+		#if openfl
+			return openfl.Assets.getText(filename);
+		#else
+			return null;
+		#end
+	}
+	
+	public function checkFile_OpenFL(filename:String):Bool
+	{
+		#if openfl
+			return openfl.Assets.exists(filename);
+		#else
+			return false;
+		#end
 	}
 	
 	/*******Lime*******/
