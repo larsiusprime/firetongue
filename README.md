@@ -274,7 +274,7 @@ In this example `$ANGRY_GOBLIN` will return `angry goblin`. Again, don't try to 
 
 For this syntax to work, a cell must contain the `<RE>` token, immediately followed by a square-bracketed valid localization flag, like this: `[$SOME_FLAG]`. The entire `<RE>[$SOME_FLAG]` string will be replaced by the redirected text. You can have multiple of these in a single cell.
 
-**UX**
+**User Experience & Index Strings**
 
 When your game first loads up, you might not be able to accurately assume the user's native language. We've found a best practice is to present something like this:
 
@@ -360,7 +360,7 @@ FireTongue and [Flixel-UI](https://github.com/haxeflixel/flixel-ui) are specific
 
 A demo project, available here in [flixel-demos](https://github.com/HaxeFlixel/flixel-demos/tree/master/User%20Interface/RPG%20Interface) and on the [HaxeFlixel website](http://haxeflixel.com/demos/RPGInterface/) demonstrates this integration.
 
-(More documentation to follow)
+For more information, see Flixel-UI.
 
 **Missing Files**
 
