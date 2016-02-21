@@ -86,9 +86,9 @@ class FireTongue
 	/**
 	 * Creates a new Firetongue instance.
 	 * @param	framework (optional): Your haxe framework, ie: OpenFL, Lime, VanillaSys, etc. Leave null for firetongue to make a best guess, or supply your own loading functions to ignore this parameter entirely.
-	 * @param	checkFile custom function to check if a file exists
-	 * @param	getText custom function to load a text file
-	 * @param	getDirectoryContents custom function to list the contents of a directory
+	 * @param	checkFile (optional) custom function to check if a file exists
+	 * @param	getText (optional) custom function to load a text file
+	 * @param	getDirectoryContents (optional) custom function to list the contents of a directory
 	 */
 	public function new(?framework:Framework, ?checkFile:String->Bool, ?getText:String->String, ?getDirectoryContents:String->Array<String>) 
 	{
@@ -162,15 +162,7 @@ class FireTongue
 		index = indexData.get(context);
 		if (index == null)
 		{
-			if (!safe)
-			{
-				return flag;
-				//throw new Error("no localization context \"+data+\"");
-			}
-			else
-			{
-				return flag;
-			}
+			return flag;
 		}
 		
 		var str:String = "";
