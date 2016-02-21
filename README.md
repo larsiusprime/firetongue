@@ -104,7 +104,7 @@ CSV format is also allowed, which would look like this:
     "$MORE_STRINGS","More strings",
     "$LOOK_MORE_STRINGS","Look, even more strings!",
 
-This creates a database of localization information, pairing "flags" with values. Instead of putting hard-coded text directly into your game code, you instead put a localization flag, like "$INSTRUCTIONS". Then, right before the text is displayed, you run FireTongue.get() and pass in your flag to get the localized string in the current locale. 
+This creates a database of localization information, pairing "flags" with values. Instead of putting hard-coded text directly into your application code, you instead put a localization flag, like "$INSTRUCTIONS". Then, right before the text is displayed, you run FireTongue.get() and pass in your flag to get the localized string in the current locale. 
 
 TSV/CSV Formatting
 --
@@ -311,7 +311,7 @@ For this syntax to work, a cell must contain the `<RE>` token, immediately follo
 
 **User Experience & Index Strings**
 
-When your game first loads up, you might not be able to accurately assume the user's native language. We've found a best practice is to present something like this:
+When your application first loads up, you might not be able to accurately assume the user's native language. We've found a best practice is to present something like this:
 
 ![Localization prompt from *Defender's Quest*](/readme_assets/dqlocale.png)
 
