@@ -40,7 +40,7 @@ class Getter
 	{
 		if (framework_ == null)
 		{
-			#if openfl
+			#if (openfl || openfl_legacy)
 				framework = OpenFL;
 			#elseif lime
 				framework = Lime;
@@ -120,7 +120,7 @@ class Getter
 	
 	public function getDirectoryContents_OpenFL(path):Array<String>
 	{
-		#if openfl
+		#if (openfl || openfl_legacy)
 			return limitPath(openfl.Assets.list(TEXT), path);
 		#else
 			return null;
@@ -129,7 +129,7 @@ class Getter
 	
 	public function getText_OpenFL(filename:String):String
 	{
-		#if openfl
+		#if (openfl || openfl_legacy)
 			return openfl.Assets.getText(filename);
 		#else
 			return null;
@@ -138,7 +138,7 @@ class Getter
 	
 	public function checkFile_OpenFL(filename:String):Bool
 	{
-		#if openfl
+		#if (openfl || openfl_legacy)
 			return openfl.Assets.exists(filename);
 		#else
 			return false;
@@ -149,7 +149,7 @@ class Getter
 	
 	public function getDirectoryContents_Lime(path):Array<String>
 	{
-		#if lime
+		#if (lime && !lime_legacy)
 			return limitPath(lime.Assets.list(TEXT), path);
 		#else
 			return null;
@@ -158,7 +158,7 @@ class Getter
 	
 	public function getText_Lime(filename:String):String
 	{
-		#if lime
+		#if (lime && !lime_legacy)
 			return lime.Assets.getText(filename);
 		#else
 			return null;
@@ -167,7 +167,7 @@ class Getter
 	
 	public function checkFile_Lime(filename:String):Bool
 	{
-		#if lime
+		#if (lime && !lime_legacy)
 			return lime.Assets.exists(filename);
 		#else
 			return false;
