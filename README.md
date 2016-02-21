@@ -274,6 +274,80 @@ In this example `$ANGRY_GOBLIN` will return `angry goblin`. Again, don't try to 
 
 For this syntax to work, a cell must contain the `<RE>` token, immediately followed by a square-bracketed valid localization flag, like this: `[$SOME_FLAG]`. The entire `<RE>[$SOME_FLAG]` string will be replaced by the redirected text. You can have multiple of these in a single cell.
 
+**UX**
+
+When your game first loads up, you might not be able to accurately assume the user's native language. We've found a best practice is to present something like this:
+
+![Localization prompt from *Defender's Quest*](/readme_assets/dqlocale.png)
+
+- A default locale is chosen to initialize Firetongue (in this case "en-US")
+- A list of locales is presented to the user, each locale line consisting of:
+  - A regional flag image
+  - The native name for the language ("English", "Español", "Italiano")
+  - In parenthesis, the localized name for the language ("Spanish", "Italian")
+  - The localized name of the region ("Spain", "Italy")
+  
+Selecting a new locale should update the menu choices in real time. This makes it easy for the user to recognize and select their preferred language, even if they cannot read the default language. It also keeps the user from getting hopelessly lost if they make a mistake.
+
+Firetongue does not provide any such interface (nor should it as it is not a GUI library), but it makes it easy to build one.
+
+`getIndexString(targetLocale,indexString)` can fetch these sorts of labels by passing a locale and a member of the `IndexString` enum:
+
+```haxe
+enum IndexString
+{
+	TheWordLanguage;
+	TheWordRegion;
+	Language;
+	LanguageNative;
+	Region;
+	RegionNative;
+	LanguageBilingual;
+	LanguageRegion;
+	LanguageRegionNative;
+}
+```
+
+The only file necessary to generate these values is your properly filled index.xml file.
+
+```xml
+	<!--American English-->
+	<locale id="en-US" is_default="true" sort="0">	
+		<contributors value="Lars Doucet, Level Up Labs"/>
+		<ui language="Language" region="Region" accept="Okay" />
+		<label id="en-US,en-GB,en-CA" language="English" region="United States"/>
+		<label id="nb-NO" language="Engelsk" region="U.S.A."/>
+	</locale>
+	
+	<!--Norwegian Bokmål-->
+	<locale id="nb-NO" sort="6">
+		<contributors value="Lars Doucet, Level Up Labs"/>
+		<ui language="Språk" region="Område"/>
+		<label id="en-US,en-GB,en-CA,yo-DA" language="Norwegian" region="Norway (Bokmål)"/>
+		<label id="nb-NO" language="Norsk" region="Norge (Bokmål)"/>
+	</locale>
+```
+
+You can alse define custom locale notes (for i.e. tooltips) in index.xml:
+
+```xml
+	<note id="volunteer">
+		<!--This means that a fan or other volunteer submitted this to us-->
+		<text id="en-US,en-GB,en-CA,yo-DA" title="VOLUNTEER" body="This is a volunteer fan translation.$N$NContributors:"/>
+		<text id="nb-NO" title="FRIVILLIG" body="Dette er en frivillig oversettelse.$N$NBidragsytere:"/>
+	</note>
+
+	<note id="official">
+		<!--This means that we solicited and paid the translator for an official translation-->
+		<text id="en-US,en-GB,en-CA,yo-DA" title="OFFICIAL" body="This is an official (paid) translation.$N$NContributors:"/>
+		<text id="nb-US" title="OFFISIELL" body="Dette er en offisiell (betalt) oversettelse.$N$NBidragsytere:"/>
+	</note>
+```
+
+...and fetch them with `getNoteTitle(locale,id)` and `getNoteBody(locale,id)`.
+
+These particular localization metadata values are specified in index.xml rather than in TSV/CSV files to aid with the bootstrapping process.
+
 **Font replacement**
 
 By itself, Firetongue doesn't really deal with fonts - properly loading them and using them is up to you. However, you can use FireTongue to create font replacement **rules**, which you can then look up at runtime while you are building interfaces or something, and use this to swap out both fonts and font sizes at the last minute. 
