@@ -291,8 +291,44 @@ Selecting a new locale should update the menu choices in real time. This makes i
 
 Firetongue does not provide any such interface (nor should it as it is not a GUI library), but it makes it easy to build one.
 
-`getIndexString()` can be called
- 
+`getIndexString(targetLocale,indexString)` can fetch these sorts of labels by passing a locale and a member of the `IndexString` enum:
+
+```haxe
+enum IndexString
+{
+	TheWordLanguage,
+	TheWordRegion,
+	Language,
+	LanguageNative,
+	Region,
+	RegionNative,
+	LanguageBilingual,
+	LanguageRegion,
+	LanguageRegionNative
+}
+```
+
+The only file necessary to generate these values is your properly filled index.xml file.
+
+```xml
+	<!--American English-->
+	<locale id="en-US" is_default="true" sort="0">	
+		<contributors value="Lars Doucet, Level Up Labs"/>
+		<ui language="Language" region="Region" accept="Okay" />
+		<label id="en-US,en-GB,en-CA" language="English" region="United States"/>
+		<label id="nb-NO" language="Engelsk" region="U.S.A."/>
+	</locale>
+	
+	<!--Norwegian Bokmål-->
+	<locale id="nb-NO" sort="6">
+		<contributors value="Lars Doucet, Level Up Labs"/>
+		<ui language="Språk" region="Område"/>
+		<label id="en-US,en-GB,en-CA,yo-DA" language="Norwegian" region="Norway (Bokmål)"/>
+		<label id="nb-NO" language="Norsk" region="Norge (Bokmål)"/>
+	</locale>
+```
+
+You can alse define custom locale notes (for i.e. tooltips) in index.xml:
 
 ```xml
 	<note id="volunteer">
@@ -307,6 +343,8 @@ Firetongue does not provide any such interface (nor should it as it is not a GUI
 		<text id="nb-US" title="OFFISIELL" body="Dette er en offisiell (betalt) oversettelse.$N$NBidragsytere:"/>
 	</note>
 ```
+
+...and fetch them with `getNoteTitle(locale,id)` and `getNoteBody(locale,id)`.
 
 **Font replacement**
 
