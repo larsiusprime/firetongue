@@ -158,6 +158,11 @@ class FireTongue
 		var orig_flag:String = flag;
 		flag = flag.toUpperCase();
 		
+		if (context == "index")
+		{
+			return matchIndexString(flag);
+		}
+		
 		var index:Map<String,String>;
 		index = indexData.get(context);
 		if (index == null)
@@ -357,8 +362,13 @@ class FireTongue
 	 * @param	flag
 	 * @return
 	 */
-	public function getIndexString(targetLocale:String,indexString:IndexString):String
+	public function getIndexString(indexString:IndexString, targetLocale:String=""):String
 	{
+		if (targetLocale == "")
+		{
+			targetLocale = locale;
+		}
+		
 		//get the locale entry for the target locale from the index
 		var lindex:Fast = indexLocales.get(targetLocale);
 		
@@ -389,43 +399,43 @@ class FireTongue
 		
 		switch(indexString)
 		{
-			case TheWordLanguage:
+			case IndexString.TheWordLanguage:
 				//return the localized word "LANGUAGE"
 				if (nativeNode.hasNode.ui && nativeNode.node.ui.has.language)
 				{
 					return currLangNode.node.ui.att.language;
 				}
-			case TheWordRegion:
+			case IndexString.TheWordRegion:
 				//return the localized word "REGION"
 				if (nativeNode.hasNode.ui && nativeNode.node.ui.has.region)
 				{
 					return currLangNode.node.ui.att.region;
 				}
-			case Language:
+			case IndexString.Language:
 				//return the name of this language in CURRENT language
 				if (currLangNode != null && currLangNode.has.language)
 				{
 					return currLangNode.att.language;
 				}
-			case LanguageNative:
+			case IndexString.LanguageNative:
 				//return the name of this language in NATIVE language
 				if (nativeNode != null && nativeNode.has.language)
 				{
 					return nativeNode.att.language;
 				}
-			case Region:
+			case IndexString.Region:
 				//return the name of this region in CURRENT language
 				if (currLangNode != null && nativeNode.has.region)
 				{
 					return currLangNode.att.region;
 				}
-			case RegionNative:
+			case IndexString.RegionNative:
 				//return the name of this region in NATIVE language
 				if (nativeNode != null && nativeNode.has.region)
 				{
 					return nativeNode.att.region;
 				}
-			case LanguageBilingual:
+			case IndexString.LanguageBilingual:
 				//return the name of this language in both CURRENT and NATIVE, if different
 				var lang:String = "";
 				var langnative:String = "";
@@ -445,16 +455,18 @@ class FireTongue
 				{
 					return lang + " (" + langnative + ")";
 				}
-			case LanguageRegion:
+			case IndexString.LanguageRegion:
 				//return something like "Inglés (Estados Unidos)" in CURRENT language (ex: curr=spanish native=english)
 				var lang:String = getIndexString(targetLocale, Language);
 				var reg:String = getIndexString(targetLocale, Region);
 				return lang + "(" + reg + ")";
-			case LanguageRegionNative:
+			case IndexString.LanguageRegionNative:
 				//return something like "English (United States)" in NATIVE language (ex: curr=spanish native=english)
 				var lang:String = getIndexString(targetLocale, LanguageNative);
 				var reg:String = getIndexString(targetLocale, RegionNative);
 				return lang + "(" + reg + ")";
+			default:
+				//donothing
 		}
 		return Std.string(indexString);
 	}
@@ -967,6 +979,46 @@ class FireTongue
 		list.push(flag);
 	}
 	
+	private function matchIndexString(str:String):String
+	{
+		var orig_str = str;
+		var arr:Array<String> = [
+			IndexString.Language,
+			IndexString.LanguageBilingual,
+			IndexString.LanguageNative,
+			IndexString.LanguageRegion,
+			IndexString.LanguageRegionNative,
+			IndexString.Region,
+			IndexString.RegionNative,
+			IndexString.TheWordLanguage,
+			IndexString.TheWordRegion
+		];
+		for (str2 in arr)
+		{
+			if (str.indexOf(str2) == 0)
+			{
+				var tempstr = StringTools.replace(orig_str, str2, "");
+				if (tempstr != "" && tempstr.indexOf(":") == 0)
+				{
+					tempstr = tempstr.substr(1, tempstr.length - 1);
+					var loc = "";
+					for (key in indexLocales.keys())
+					{
+						if (key.toUpperCase() == tempstr.toUpperCase())
+						{
+							loc = key;
+						}
+					}
+					if (loc != "")
+					{
+						return getIndexString(str2, loc);
+					}
+				}
+			}
+		}
+		return orig_str;
+	}
+	
 	private function onLoadFile():Void
 	{
 		filesLoaded++;
@@ -1250,17 +1302,18 @@ class FireTongue
 	}
 }
 
-enum IndexString
+@:enum
+abstract IndexString(String) from String to String
 {
-	TheWordLanguage;
-	TheWordRegion;
-	Language;
-	LanguageNative;
-	Region;
-	RegionNative;
-	LanguageBilingual;
-	LanguageRegion;
-	LanguageRegionNative;
+	var TheWordLanguage = "$UI_LANGUAGE";
+	var TheWordRegion = "$UI_REGION";
+	var Language = "$LANGUAGE";
+	var LanguageNative = "$LANGUAGE_NATIVE";
+	var Region = "$REGION";
+	var RegionNative = "$REGION_NATIVE";
+	var LanguageBilingual = "$LANGUAGE_BILINGUAL";
+	var LanguageRegion = "$LANGUAGE_REGION";
+	var LanguageRegionNative = "$LANGUAGE_REGION_NATIVE";
 }
 
 enum Framework
