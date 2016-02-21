@@ -296,15 +296,15 @@ Firetongue does not provide any such interface (nor should it as it is not a GUI
 ```haxe
 enum IndexString
 {
-	TheWordLanguage,
-	TheWordRegion,
-	Language,
-	LanguageNative,
-	Region,
-	RegionNative,
-	LanguageBilingual,
-	LanguageRegion,
-	LanguageRegionNative
+	TheWordLanguage;
+	TheWordRegion;
+	Language;
+	LanguageNative;
+	Region;
+	RegionNative;
+	LanguageBilingual;
+	LanguageRegion;
+	LanguageRegionNative;
 }
 ```
 
@@ -345,6 +345,8 @@ You can alse define custom locale notes (for i.e. tooltips) in index.xml:
 ```
 
 ...and fetch them with `getNoteTitle(locale,id)` and `getNoteBody(locale,id)`.
+
+These particular localization metadata values are specified in index.xml rather than in TSV/CSV files to aid with the bootstrapping process.
 
 **Font replacement**
 
