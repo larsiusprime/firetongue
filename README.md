@@ -1,7 +1,7 @@
 FireTongue
 ==========
 
-A translation/localization framework written in Haxe
+A framework-agnostic translation/localization library for Haxe
 
 Installation 
 --
@@ -15,11 +15,13 @@ Using latest git version:
 
 Running the sample
 --
-Navigate to the sample directory and run:
+Navigate to the sample directory, and run:
 
-    openfl build <platform> project.xml
+    lime test <platform>
 
-Where "platform" is flash, windows, mac, etc.
+Where "platform" is flash, windows, mac, linux, neko, html5, etc.
+
+Although the included samples uses OpenFL, Firetongue works with any Haxe framework (or no framework at all!)
 
 Usage
 --
