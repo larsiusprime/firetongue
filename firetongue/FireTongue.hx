@@ -158,11 +158,6 @@ class FireTongue
 		var orig_flag:String = flag;
 		flag = flag.toUpperCase();
 		
-		if (context == "index")
-		{
-			return getIndexString(flag);
-		}
-		
 		var index:Map<String,String>;
 		index = indexData.get(context);
 		if (index == null)
@@ -365,111 +360,111 @@ class FireTongue
 		return indexIcons.get(locale_id);
 	}
 	
-	public function getIndexString(flag:String):String
+	/**
+	 * 
+	 * @param	flag
+	 * @return
+	 */
+	public function getIndexString(targetLocale:String,indexString:IndexString):String
 	{
-		var str:String = "";
+		//get the locale entry for the target locale from the index
+		var lindex:Fast = indexLocales.get(targetLocale);
 		
-		var arr:Array<String> = null;
-		if (flag.indexOf(":") != 0)
+		var currLangNode:Fast = null;
+		var nativeNode:Fast = null;
+		
+		if (lindex.hasNode.label)
 		{
-			arr = flag.split(":");
-			if (arr != null && arr.length == 2)
+			for (lNode in lindex.nodes.label)			//look through each label
 			{
-				var target_locale:String = localeFormat(arr[1]);
-				var index_flag:String = arr[0];
-				
-				//get the locale entry for the target locale from the index
-				var lindex:Fast = indexLocales.get(target_locale);
-				
-				var currLangNode:Fast = null;
-				var nativeNode:Fast = null;
-				
-				if (lindex.hasNode.label)
-				{
-					for (lNode in lindex.nodes.label)			//look through each label
+				if (lNode.has.id) {
+					var lnid:String = lNode.att.id;
+					if (lnid.indexOf(locale) != -1)		//if it matches the CURRENT locale
 					{
-						if (lNode.has.id) {
-							var lnid:String = lNode.att.id;
-							if (lnid.indexOf(locale) != -1)		//if it matches the CURRENT locale
-							{
-								currLangNode = lNode;			//labels in CURRENT language
-							}
-							if (lnid.indexOf(target_locale) != -1)		//if it matches its own NATIVE locale
-							{
-								nativeNode = lNode;						//labels in NATIVE language
-							}
-							if (currLangNode != null && nativeNode != null)
-							{
-								break;
-							}
-						}
+						currLangNode = lNode;			//labels in CURRENT language
 					}
-				}	
-				
-				switch(index_flag)
-				{
-					case "$UI_LANGUAGE":	//return the localized word "LANGUAGE"
-						if (nativeNode.hasNode.ui && nativeNode.node.ui.has.language)
-						{
-							return currLangNode.node.ui.att.language;
-						}
-					case "$UI_REGION":		//return the localized word "REGION"
-						if (nativeNode.hasNode.ui && nativeNode.node.ui.has.region)
-						{
-							return currLangNode.node.ui.att.region;
-						}
-					case "$LANGUAGE":		//return the name of this language in CURRENT language
-						if (currLangNode != null && currLangNode.has.language)
-						{
-							return currLangNode.att.language;
-						}
-					case "$LANGUAGE_NATIVE"://return the name of this language in NATIVE language
-						if (nativeNode != null && nativeNode.has.language)
-						{
-							return nativeNode.att.language;
-						}
-					case "$REGION":			//return the name of this region in CURRENT language
-						if (currLangNode != null && nativeNode.has.region)
-						{
-							return currLangNode.att.region;
-						}
-					case "$REGION_NATIVE":	//return the name of this region in NATIVE language
-						if (nativeNode != null && nativeNode.has.region)
-						{
-							return nativeNode.att.region;
-						}
-					case "$LANGUAGE_BILINGUAL": //return the name of this language in both CURRENT and NATIVE, if different
-						var lang:String = "";
-						var langnative:String = "";
-						if (nativeNode != null && nativeNode.has.language)
-						{
-							langnative = nativeNode.att.language;
-						}
-						if (currLangNode != null && currLangNode.has.language)
-						{
-							lang = currLangNode.att.language;
-						}
-						if (lang == langnative)
-						{
-							return lang;
-						}
-						else
-						{
-							return lang + " (" + langnative + ")";
-						}
-					case "$LANGUAGE(REGION)":	//return something like "Inglés (Estados Unidos)" in CURRENT language (ex: curr=spanish native=english)
-						var lang:String = getIndexString("$LANGUAGE:"+target_locale);
-						var reg:String = getIndexString("$REGION:" + target_locale);
-						return lang + "(" + reg + ")";
-					case "$LANGUAGE(REGION)_NATIVE": //return something like "English (United States)" in NATIVE language (ex: curr=spanish native=english)
-						var lang:String = getIndexString("$LANGUAGE_NATIVE:"+target_locale);
-						var reg:String = getIndexString("$REGION_NATIVE:" + target_locale);
-						return lang + "(" + reg + ")";
+					if (lnid.indexOf(targetLocale) != -1)		//if it matches its own NATIVE locale
+					{
+						nativeNode = lNode;						//labels in NATIVE language
+					}
+					if (currLangNode != null && nativeNode != null)
+					{
+						break;
+					}
 				}
 			}
 		}
 		
-		return flag;
+		switch(indexString)
+		{
+			case TheWordLanguage:
+				//return the localized word "LANGUAGE"
+				if (nativeNode.hasNode.ui && nativeNode.node.ui.has.language)
+				{
+					return currLangNode.node.ui.att.language;
+				}
+			case TheWordRegion:
+				//return the localized word "REGION"
+				if (nativeNode.hasNode.ui && nativeNode.node.ui.has.region)
+				{
+					return currLangNode.node.ui.att.region;
+				}
+			case Language:
+				//return the name of this language in CURRENT language
+				if (currLangNode != null && currLangNode.has.language)
+				{
+					return currLangNode.att.language;
+				}
+			case LanguageNative:
+				//return the name of this language in NATIVE language
+				if (nativeNode != null && nativeNode.has.language)
+				{
+					return nativeNode.att.language;
+				}
+			case Region:
+				//return the name of this region in CURRENT language
+				if (currLangNode != null && nativeNode.has.region)
+				{
+					return currLangNode.att.region;
+				}
+			case RegionNative:
+				//return the name of this region in NATIVE language
+				if (nativeNode != null && nativeNode.has.region)
+				{
+					return nativeNode.att.region;
+				}
+			case LanguageBilingual:
+				//return the name of this language in both CURRENT and NATIVE, if different
+				var lang:String = "";
+				var langnative:String = "";
+				if (nativeNode != null && nativeNode.has.language)
+				{
+					langnative = nativeNode.att.language;
+				}
+				if (currLangNode != null && currLangNode.has.language)
+				{
+					lang = currLangNode.att.language;
+				}
+				if (lang == langnative)
+				{
+					return lang;
+				}
+				else
+				{
+					return lang + " (" + langnative + ")";
+				}
+			case LanguageRegion:
+				//return something like "Inglés (Estados Unidos)" in CURRENT language (ex: curr=spanish native=english)
+				var lang:String = getIndexString(targetLocale, Language);
+				var reg:String = getIndexString(targetLocale, Region);
+				return lang + "(" + reg + ")";
+			case LanguageRegionNative:
+				//return something like "English (United States)" in NATIVE language (ex: curr=spanish native=english)
+				var lang:String = getIndexString(targetLocale, LanguageNative);
+				var reg:String = getIndexString(targetLocale, RegionNative);
+				return lang + "(" + reg + ")";
+		}
+		return Std.string(indexString);
 	}
 	
 	/**
@@ -1261,6 +1256,19 @@ class FireTongue
 			index.set(flag, value);
 		}
 	}
+}
+
+enum IndexString
+{
+	TheWordLanguage;
+	TheWordRegion;
+	Language;
+	LanguageNative;
+	Region;
+	RegionNative;
+	LanguageBilingual;
+	LanguageRegion;
+	LanguageRegionNative;
 }
 
 enum Framework
