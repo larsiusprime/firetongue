@@ -274,11 +274,38 @@ In this example `$ANGRY_GOBLIN` will return `angry goblin`. Again, don't try to 
 
 For this syntax to work, a cell must contain the `<RE>` token, immediately followed by a square-bracketed valid localization flag, like this: `[$SOME_FLAG]`. The entire `<RE>[$SOME_FLAG]` string will be replaced by the redirected text. You can have multiple of these in a single cell.
 
-**Translation notes**
+**UX**
 
-Firetongue is not a user interface library, but it makes it easier to present a friendly UI for picking a localization. Your main index.xml file can include translation notes, like this:
+When your game first loads up, you might not be able to accurately assume the user's native language. We've found a best practice is to present something like this:
+
+![Localization prompt from *Defender's Quest*](/readme_assets/dqlocale.png)
+
+- A default locale is chosen to initialize Firetongue (in this case "en-US")
+- A list of locales is presented to the user, each locale line consisting of:
+  - A regional flag image
+  - The native name for the language ("English", "Español", "Italiano")
+  - In parenthesis, the localized name for the language ("Spanish", "Italian")
+  - The localized name of the region ("Spain", "Italy")
+  
+Selecting a new locale should update the menu choices in real time. This makes it easy for the user to recognize and select their preferred language, even if they cannot read the default language. It also keeps the user from getting hopelessly lost if they make a mistake.
+
+Firetongue does not provide any such interface (nor should it as it is not a GUI library), but it makes it easy to build one.
+
+`getIndexString()` can be called
+ 
 
 ```xml
+	<note id="volunteer">
+		<!--This means that a fan or other volunteer submitted this to us-->
+		<text id="en-US,en-GB,en-CA,yo-DA" title="VOLUNTEER" body="This is a volunteer fan translation.$N$NContributors:"/>
+		<text id="nb-NO" title="FRIVILLIG" body="Dette er en frivillig oversettelse.$N$NBidragsytere:"/>
+	</note>
+
+	<note id="official">
+		<!--This means that we solicited and paid the translator for an official translation-->
+		<text id="en-US,en-GB,en-CA,yo-DA" title="OFFICIAL" body="This is an official (paid) translation.$N$NContributors:"/>
+		<text id="nb-US" title="OFFISIELL" body="Dette er en offisiell (betalt) oversettelse.$N$NBidragsytere:"/>
+	</note>
 ```
 
 **Font replacement**
