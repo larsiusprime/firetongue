@@ -274,6 +274,13 @@ In this example `$ANGRY_GOBLIN` will return `angry goblin`. Again, don't try to 
 
 For this syntax to work, a cell must contain the `<RE>` token, immediately followed by a square-bracketed valid localization flag, like this: `[$SOME_FLAG]`. The entire `<RE>[$SOME_FLAG]` string will be replaced by the redirected text. You can have multiple of these in a single cell.
 
+**Translation notes**
+
+Firetongue is not a user interface library, but it makes it easier to present a friendly UI for picking a localization. Your main index.xml file can include translation notes, like this:
+
+```xml
+```
+
 **Font replacement**
 
 By itself, Firetongue doesn't really deal with fonts - properly loading them and using them is up to you. However, you can use FireTongue to create font replacement **rules**, which you can then look up at runtime while you are building interfaces or something, and use this to swap out both fonts and font sizes at the last minute. 
