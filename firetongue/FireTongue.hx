@@ -177,69 +177,20 @@ class FireTongue
 			
 			if (str != null && str != "")
 			{
-				while(str.indexOf("<RE>[") != -1)			//it's a redirect in the middle of the flag with bracket notation
+				var redirectStr = tryRedirect(index, str);
+				if (redirectStr != null)
 				{
-					var done:Bool = false;
-					var failsafe:Int = 0;
-					
-					var start:Int = str.indexOf("<RE>[");
-					var end:Int = str.indexOf("]");
-					
-					var flag = "";
-					var match = "";
-					
-					if (start != 1 && end != -1)				//redirection exists
-					{
-						match = str.substr(start, end + 1);
-						flag = str.substring(start + 5, end);	//cut off the redirection and the brackets
-						
-						if (flag == "" || flag == null)
-						{
-							break;
-						}
-						
-						var new_str = index.get(flag);					//look it up again
-						
-						if (new_str == null || new_str == "")		//give up
-						{
-							done = true;
-						}
-						str = StringTools.replace(str, match, new_str);
-					}
+					str = redirectStr;
 				}
-				
-				if (str.indexOf("<RE>") == 0 && str.indexOf("<RE>[") == -1)					//it's a whole-line redirect
+				else
 				{
-					var done:Bool = false;
-					var failsafe:Int = 0;
-					str = StringTools.replace(str, "<RE>", "");	//cut out the redirect
-					while (!done)
+					if (safe)
 					{
-						var new_str:String = index.get(str);	//look it up again
-						if (new_str != null && new_str != "") 	//string exists
-						{
-							str = new_str;
-							if (str.indexOf("<RE>") != 0)			//if it's not ANOTHER redirect, stop looking
-							{
-								done = true;
-							}
-							else
-							{
-								//another redirect, keep looking
-								str = StringTools.replace(str, "<RE>", "");
-							}
-						}
-						else										//give up
-						{
-							done = true;
-							str = new_str;
-						}
-						failsafe++;
-						if (failsafe > 100)							//max recursion: 100
-						{
-							done = true;
-							str = new_str;
-						}
+						str = flag;
+					}
+					else
+					{
+						str = redirectStr;
 					}
 				}
 				
@@ -284,6 +235,7 @@ class FireTongue
 		
 		return str;
 	}
+	
 	/**
 	 * Get a font name, honoring locale replacement rules
 	 * @param	str
@@ -1184,6 +1136,57 @@ class FireTongue
 		}
 	}
 	
+	private function redirectSection(start:Int, end:Int, index:Map<String,String>, str:String):String
+	{
+		var flag = "";
+		var match = "";
+		
+		if (start != 1 && end != -1 && end > start)	//redirection exists
+		{
+			match = str.substring(start, end + 1);
+			flag = str.substring(start + 5, end);	//cut off the redirection and the brackets
+			
+			if (flag == "" || flag == null)
+			{
+				return null;
+			}
+			
+			if (index.exists(flag))
+			{
+				var new_str = index.get(flag);					//look it up again
+				
+				if (new_str != null)
+				{
+					//If we have whole-line redirects as the targets for our section redirect, we need to resolve those
+					//completely before we substitute them into the parent string. If they contain further sectional redirects,
+					//those will be caught & processed later
+					while(new_str.indexOf("<RE>") != -1 && new_str.indexOf("<RE>[") == -1)
+					{
+						var new_str_redirect = redirectLine(index, new_str);
+						if (new_str_redirect != null)
+						{
+							new_str = new_str_redirect;
+						}
+					}
+					
+					str = StringTools.replace(str, match, new_str);
+					return str;
+				}
+			}
+		}
+		return null;
+	}
+	
+	private function redirectLine(index:Map<String,String>, str:String):String
+	{
+		str = StringTools.replace(str, "<RE>", "");	//cut out the redirect
+		if (index.exists(str))
+		{
+			return index.get(str);	//look it up again
+		}
+		return null;
+	}
+	
 	private function startLoad(?asynchMethod:Array<LoadTask>->Void):Void
 	{
 		//if we don't have a list of files, we need to process the index first
@@ -1273,6 +1276,37 @@ class FireTongue
 		}
 		
 		return totalDiff;
+	}
+	
+	private function tryRedirect(index:Map<String,String>, str:String, failsafe:Int=100):String
+	{
+		var orig:String = str;
+		
+		//keep processing until no redirection tokens are detected, or the failsafe is tripped
+		while (str != null && str.indexOf("<RE>") != -1 && failsafe > 0)
+		{
+			var last = str;
+			
+			var sectionStart = str.indexOf("<RE>[");
+			var sectionEnd = str.indexOf("]");
+			if (sectionStart != -1 && sectionEnd != -1 && sectionEnd > sectionStart)
+			{
+				//replace the portion inside a redirect section token
+				str = redirectSection(sectionStart, sectionEnd, index, str);
+			}
+			else
+			{
+				//treat it like a whole-line redirect
+				str = redirectLine(index, str);
+			}
+			failsafe--;
+		}
+		if (failsafe <= 0)
+		{
+			trace("WARNING! > " + failsafe + " redirections detected when processing (" + orig + "), failsafe tripped!");
+			str = orig;
+		}
+		return str;
 	}
 	
 	private function writeIndex(index:Map<String,String>, flag:String, value:String, id:String, checkVsDefault:Bool = false):Void
