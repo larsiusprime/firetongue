@@ -428,7 +428,7 @@ You can alse define custom locale notes (for i.e. tooltips) in index.xml:
 	<note id="official">
 		<!--This means that we solicited and paid the translator for an official translation-->
 		<text id="en-US,en-GB,en-CA,yo-DA" title="OFFICIAL" body="This is an official (paid) translation.$N$NContributors:"/>
-		<text id="nb-US" title="OFFISIELL" body="Dette er en offisiell (betalt) oversettelse.$N$NBidragsytere:"/>
+		<text id="nb-NOf" title="OFFISIELL" body="Dette er en offisiell (betalt) oversettelse.$N$NBidragsytere:"/>
 	</note>
 ```
 
@@ -456,7 +456,7 @@ Then at runtime you can call:
 
 ```haxe
 var oldfont = "verdana";
-var newfont = tongue.getFont(oldfont);  //returns "comicsans"
+var newfont = tongue.getFont(oldfont);  //returns "arial"
 
 var oldsize = 12;
 var newsize = tongue.getFontSize(oldsize); //returns 14
