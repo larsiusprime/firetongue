@@ -2,12 +2,10 @@
  "name": "firetongue",
  "url" : "https://github.com/larsiusprime/firetongue",
  "license": "MIT",
- "tags": ["translation","localization","language","game","text","openfl"],
- "description": "A localization/translation library for games",
- "version": "0.0.1",
- "releasenote": "Pre-alpha release",
+ "tags": ["translation","localization","language","text"],
+ "description": "A framework-agnostic translation/localization library for Haxe",
+ "version": "2.0.0",
+ "releasenote": "",
  "contributors": ["larsiusprime"],
- "dependencies": { 
-  "openfl": ""
- }
+ "dependencies": {}
 }
