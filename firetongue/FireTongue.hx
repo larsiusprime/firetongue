@@ -1281,11 +1281,12 @@ class FireTongue
 	private function tryRedirect(index:Map<String,String>, str:String, failsafe:Int=100):String
 	{
 		var orig:String = str;
+		var last:String = null;
 		
 		//keep processing until no redirection tokens are detected, or the failsafe is tripped
 		while (str != null && str.indexOf("<RE>") != -1 && failsafe > 0)
 		{
-			var last = str;
+			last = str;
 			
 			var sectionStart = str.indexOf("<RE>[");
 			var sectionEnd = str.indexOf("]");
@@ -1305,6 +1306,11 @@ class FireTongue
 		{
 			trace("WARNING! > " + failsafe + " redirections detected when processing (" + orig + "), failsafe tripped!");
 			str = orig;
+		}
+		
+		if (str == null && last != null)
+		{
+			str = last;
 		}
 		return str;
 	}
