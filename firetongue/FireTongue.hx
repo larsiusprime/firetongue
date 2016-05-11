@@ -310,12 +310,52 @@ class FireTongue
 	}
 	
 	/**
+	 * Returns a copy of the specified locale definition's xml node
+	 * @param	targetLocale	the locale in question, ie "en-US"
+	 * @return
+	 */
+	
+	public function getIndexNode(targetLocale:String = ""):Xml
+	{
+		var node:Fast = indexLocales.get(targetLocale);
+		return Xml.parse(node.x.toString());
+	}
+	
+	/**
+	 * Gets an attribute from the specified locale definition's xml node
+	 * @param	targetLocale	the locale in question, ie "en-US"
+	 * @param	attribute	the attribute you want, ie "volunteer"
+	 * @param	child	(optional) the name of a child node if you want to read from that instead of the main root
+	 * @return
+	 */
+	public function getIndexAttribute(targetLocale:String, attribute:String, ?child:String=""):String
+	{
+		var node:Fast = indexLocales.get(targetLocale);
+		
+		if (child != null && node.hasNode.resolve(child))
+		{
+			node = node.node.resolve(child);
+		}
+		
+		if (node != null && node.has.resolve(attribute))
+		{
+			return node.att.resolve(attribute);
+		}
+		return "";
+	}
+	
+	/**
 	 * 
 	 * @param	flag
 	 * @return
 	 */
-	public function getIndexString(indexString:IndexString, targetLocale:String=""):String
+	public function getIndexString(indexString:IndexString, targetLocale:String="", currLocale:String=""):String
 	{
+		if (currLocale == "")
+		{
+			currLocale = locale;
+		}
+		
 		if (targetLocale == "")
 		{
 			targetLocale = locale;
@@ -333,9 +373,9 @@ class FireTongue
 			{
 				if (lNode.has.id) {
 					var lnid:String = lNode.att.id;
-					if (lnid.indexOf(locale) != -1)		//if it matches the CURRENT locale
+					if (lnid.indexOf(currLocale) != -1)		//if it matches the CURRENT locale
 					{
-						currLangNode = lNode;			//labels in CURRENT language
+						currLangNode = lNode;				//labels in CURRENT language
 					}
 					if (lnid.indexOf(targetLocale) != -1)		//if it matches its own NATIVE locale
 					{
@@ -353,15 +393,15 @@ class FireTongue
 		{
 			case IndexString.TheWordLanguage:
 				//return the localized word "LANGUAGE"
-				if (nativeNode.hasNode.ui && nativeNode.node.ui.has.language)
+				if (lindex.hasNode.ui && lindex.node.ui.has.language)
 				{
-					return currLangNode.node.ui.att.language;
+					return lindex.node.ui.att.language;
 				}
 			case IndexString.TheWordRegion:
 				//return the localized word "REGION"
-				if (nativeNode.hasNode.ui && nativeNode.node.ui.has.region)
+				if (lindex.hasNode.ui && lindex.node.ui.has.region)
 				{
-					return currLangNode.node.ui.att.region;
+					return lindex.node.ui.att.region;
 				}
 			case IndexString.Language:
 				//return the name of this language in CURRENT language
