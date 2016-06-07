@@ -155,6 +155,10 @@ class FireTongue
 	
 	public function get(flag:String, context:String = "data", safe:Bool = true):String
 	{
+		if (flag == null){
+			return null;
+		}
+		
 		var orig_flag:String = flag;
 		flag = flag.toUpperCase();
 		
