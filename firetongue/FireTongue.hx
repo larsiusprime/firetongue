@@ -23,6 +23,7 @@
 
 package firetongue;
 
+import firetongue.FireTongue.Case;
 import firetongue.FireTongue.LoadTask;
 import haxe.xml.Fast;
 
@@ -84,14 +85,20 @@ class FireTongue
 	public var missingFlags(default, null):Map<String,Array<String>>;
 	
 	/**
+	 * what text case (if any) to process flags with when getting strings
+	 */
+	public var forceFlagsToCase(default, null):Case;
+	
+	/**
 	 * Creates a new Firetongue instance.
 	 * @param	framework (optional): Your haxe framework, ie: OpenFL, Lime, VanillaSys, etc. Leave null for firetongue to make a best guess, or supply your own loading functions to ignore this parameter entirely.
 	 * @param	checkFile (optional) custom function to check if a file exists
 	 * @param	getText (optional) custom function to load a text file
 	 * @param	getDirectoryContents (optional) custom function to list the contents of a directory
 	 */
-	public function new(?framework:Framework, ?checkFile:String->Bool, ?getText:String->String, ?getDirectoryContents:String->Array<String>) 
+	public function new(?framework:Framework, ?checkFile:String->Bool, ?getText:String->String, ?getDirectoryContents:String->Array<String>, ?forceCase:Case=Case.Upper) 
 	{
+		forceFlagsToCase = forceCase;
 		getter = new Getter(framework, checkFile, getText, getDirectoryContents);
 	}
 	
@@ -160,7 +167,12 @@ class FireTongue
 		}
 		
 		var orig_flag:String = flag;
-		flag = flag.toUpperCase();
+		flag = switch(forceFlagsToCase)
+		{
+			case Upper: flag.toUpperCase();
+			case Lower: flag.toLowerCase();
+			default: flag;
+		}
 		
 		if (context == "index")
 		{
@@ -1117,7 +1129,14 @@ class FireTongue
 					var field:String = csv.fields[fieldi];
 					if (field != "comment")
 					{
-						writeIndex(index, (flag + "_" + field).toUpperCase(), row[fieldi],id,checkVsDefault);
+						var newFlag = (flag + "_" + field);
+						newFlag = switch(forceFlagsToCase)
+						{
+							case Upper: newFlag.toUpperCase();
+							case Lower: newFlag.toLowerCase();
+							default: newFlag;
+						}
+						writeIndex(index, newFlag, row[fieldi],id,checkVsDefault);
 					}
 				}
 			}
@@ -1126,6 +1145,13 @@ class FireTongue
 				//If only two non-comment fields, 
 				//Assume it's the standard ("flag","value") pattern
 				//Just write the first cell
+				
+				flag = switch(forceFlagsToCase)
+				{
+					case Upper: flag.toUpperCase();
+					case Lower: flag.toLowerCase();
+					default: flag;
+				}
 				writeIndex(index, flag, row[1], id, checkVsDefault);
 			}
 		}
@@ -1408,6 +1434,14 @@ enum Framework
 	NME;
 	Custom;
 	//add more frameworks as they are supported ... maybe?
+}
+
+@:enum
+abstract Case(Int) from Int to Int
+{
+	var Upper = 1;
+	var Lower = -1;
+	var Unchanged = 0;
 }
 
 typedef LoadTask = {fileNode:Fast,check:Bool}
