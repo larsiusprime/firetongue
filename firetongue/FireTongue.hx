@@ -95,6 +95,7 @@ class FireTongue
 	 * @param	checkFile (optional) custom function to check if a file exists
 	 * @param	getText (optional) custom function to load a text file
 	 * @param	getDirectoryContents (optional) custom function to list the contents of a directory
+	 * @param	forceCase (optional) what case to force for flags in CSV/TSV files, and in the get() function -- default is to force uppercase.
 	 */
 	public function new(?framework:Framework, ?checkFile:String->Bool, ?getText:String->String, ?getDirectoryContents:String->Array<String>, ?forceCase:Case=Case.Upper) 
 	{
