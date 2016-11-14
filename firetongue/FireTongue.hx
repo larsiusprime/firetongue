@@ -1147,11 +1147,14 @@ class FireTongue
 				//Assume it's the standard ("flag","value") pattern
 				//Just write the first cell
 				
-				flag = switch(forceFlagsToCase)
+				if (flag != null)
 				{
-					case Upper: flag.toUpperCase();
-					case Lower: flag.toLowerCase();
-					default: flag;
+					flag = switch(forceFlagsToCase)
+					{
+						case Upper: flag.toUpperCase();
+						case Lower: flag.toLowerCase();
+						default: flag;
+					}
 				}
 				writeIndex(index, flag, row[1], id, checkVsDefault);
 			}
