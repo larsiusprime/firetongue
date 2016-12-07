@@ -23,8 +23,6 @@
 
 package firetongue;
 
-import flash.display.Sprite;
-
 class Replace {
 
 	/**
