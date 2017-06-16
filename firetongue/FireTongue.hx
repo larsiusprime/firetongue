@@ -939,6 +939,9 @@ class FireTongue
 	{
 		var firstFile = listFiles[0];
 		var value:String = "";
+		
+		if (firstFile == null) return;
+		
 		if (firstFile.hasNode.file && firstFile.node.file.has.value)
 		{
 			value = firstFile.node.file.att.value;
