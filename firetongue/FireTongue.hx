@@ -90,6 +90,11 @@ class FireTongue
 	public var forceFlagsToCase(default, null):Case;
 	
 	/**
+	 * Custom string replacement function to use internally -- uses StringTools.replace() by default if null
+	 */
+	public var replaceFunction:String->String->String->String;
+	
+	/**
 	 * Creates a new Firetongue instance.
 	 * @param	framework (optional): Your haxe framework, ie: OpenFL, Lime, VanillaSys, etc. Leave null for firetongue to make a best guess, or supply your own loading functions to ignore this parameter entirely.
 	 * @param	checkFile (optional) custom function to check if a file exists
@@ -222,7 +227,7 @@ class FireTongue
 					{
 						while (str.indexOf(fix_a[i]) != -1)
 						{
-							str = StringTools.replace(str, fix_a[i], fix_b[i]);
+							str = doReplace(str, fix_a[i], fix_b[i]);
 						}
 					}
 				}
@@ -554,6 +559,15 @@ class FireTongue
 	
 	private var directory:String = "assets/locales";
 	
+	private function doReplace(s:String, sub:String, by:String):String
+	{
+		if (replaceFunction != null)
+		{
+			return replaceFunction(s, sub, by);
+		}
+		return StringTools.replace(s, sub, by);
+	}
+	
 	/**
 	 * Clear all the current localization data. 
 	 * @param	hard Also clear all the index-related data, restoring it to a pre-initialized state.
@@ -662,8 +676,8 @@ class FireTongue
 			
 			for (str in paths)
 			{
-				var newLocale:String = StringTools.replace(str, directory, "");
-				newLocale = StringTools.replace(newLocale, "\\", "/");
+				var newLocale:String = doReplace(str, directory, "");
+				newLocale = doReplace(newLocale, "\\", "/");
 				var split:Array<String> = newLocale.split("/");
 				if (split != null && split.length > 0)
 				{
@@ -1006,7 +1020,7 @@ class FireTongue
 		{
 			if (str.indexOf(str2) == 0)
 			{
-				var tempstr = StringTools.replace(orig_str, str2, "");
+				var tempstr = doReplace(orig_str, str2, "");
 				if (tempstr != "" && tempstr.indexOf(":") == 0)
 				{
 					tempstr = tempstr.substr(1, tempstr.length - 1);
@@ -1159,7 +1173,6 @@ class FireTongue
 				writeIndex(index, flag, row[1], id, checkVsDefault);
 			}
 		}
-		
 		csv.destroy();
 		csv = null;
 	}
@@ -1243,7 +1256,7 @@ class FireTongue
 						}
 					}
 					
-					str = StringTools.replace(str, match, new_str);
+					str = doReplace(str, match, new_str);
 					return str;
 				}
 			}
@@ -1253,7 +1266,7 @@ class FireTongue
 	
 	private function redirectLine(index:Map<String,String>, str:String):String
 	{
-		str = StringTools.replace(str, "<RE>", "");	//cut out the redirect
+		str = doReplace(str, "<RE>", "");	//cut out the redirect
 		if (index.exists(str))
 		{
 			return index.get(str);	//look it up again
