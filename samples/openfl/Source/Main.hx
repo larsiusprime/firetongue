@@ -77,10 +77,10 @@ class Main extends Sprite {
 		{
 			var img = Assets.getBitmapData(tongue.getIcon(locale));
 			
-			var img2:BitmapData = new BitmapData(img.width * 3, img.height * 3, false, 0xff000000);
+			var img2:BitmapData = new BitmapData(img.width * 2, img.height * 2, false, 0xff000000);
 			var matrix:Matrix = new Matrix();
 			matrix.identity();
-			matrix.scale(3, 3);
+			matrix.scale(2, 2);
 			img2.draw(img, matrix);
 			
 			var up:Bitmap = new Bitmap(img2);
@@ -107,21 +107,21 @@ class Main extends Sprite {
 		
 		var xgraphic:Shape = new Shape();
 		xgraphic.graphics.beginFill(0xFF0000);
-		xgraphic.graphics.drawRect(0, 0, 48, 33);
+		xgraphic.graphics.drawRect(0, 0, 80, 32);
 		xgraphic.graphics.lineStyle(3, 0x000000);
 		xgraphic.graphics.moveTo(0, 0);
-		xgraphic.graphics.lineTo(48, 33);
-		xgraphic.graphics.moveTo(48, 0);
-		xgraphic.graphics.lineTo(0, 33);
+		xgraphic.graphics.lineTo(80, 32);
+		xgraphic.graphics.moveTo(80, 0);
+		xgraphic.graphics.lineTo(0, 32);
 		
 		var xgraphic2:Shape = new Shape();
 		xgraphic2.graphics.beginFill(0xFF8080);
-		xgraphic2.graphics.drawRect(0, 0, 48, 33);
+		xgraphic2.graphics.drawRect(0, 0, 80, 32);
 		xgraphic2.graphics.lineStyle(3, 0x808080);
 		xgraphic2.graphics.moveTo(0, 0);
-		xgraphic2.graphics.lineTo(48, 33);
-		xgraphic2.graphics.moveTo(48, 0);
-		xgraphic2.graphics.lineTo(0, 33);
+		xgraphic2.graphics.lineTo(80, 32);
+		xgraphic2.graphics.moveTo(80, 0);
+		xgraphic2.graphics.lineTo(0, 32);
 		
 		var mb2 = new MyButton(xgraphic, xgraphic2, null);
 		addChild(mb2);

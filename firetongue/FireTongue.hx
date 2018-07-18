@@ -755,7 +755,8 @@ class FireTongue
 		
 		switch(fileType)
 		{
-			case "txt","tsv":
+			case "txt", "tsv":
+				var raw_data = null;
 				var raw_data = loadText(loc + "/" + fileName);
 				if (raw_data != "" && raw_data != null)
 				{
@@ -878,9 +879,16 @@ class FireTongue
 			id = localeNode.att.id;
 			indexLocales.set(id, localeNode);
 			
-			//load & store the flag image existence
+			//load & store the icon image existence
+			
+			var iconAsset = directory + "_icons/" + id + ".png";
 			var flagAsset = directory + "_flags/" + id + ".png";
-			if (loadImage(flagAsset))
+			
+			if (loadImage(iconAsset))
+			{
+				indexIcons.set(id, iconAsset);
+			}
+			else if (loadImage(flagAsset))
 			{
 				indexIcons.set(id, flagAsset);
 			}
@@ -948,7 +956,15 @@ class FireTongue
 		}
 		if (value != "")
 		{
-			var testText:String = loadText(locale+"/"+value);
+			var testText:String = null;
+			try
+			{
+				testText = loadText(locale+"/" + value);
+			}
+			catch (msg:Dynamic)
+			{
+				testText = null;
+			}
 			if (testText == "" || testText == null)
 			{
 				#if debug
@@ -968,7 +984,14 @@ class FireTongue
 	
 	private function loadText(fname:String):String
 	{
-		return getter.getText(directory+fname);
+		try
+		{
+			return getter.getText(directory + fname);
+		}
+		catch (msg:Dynamic)
+		{
+			return null;
+		}
 	}
 	
 	private function localeFormat(str:String):String

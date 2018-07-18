@@ -55,14 +55,16 @@ In your OpenFL assets directory, create a folder setup like this:
 
 * assets/
     * locales/
-        * _flags/
+        * _icons/
         * en-US/
         * nb-NO/
         * index.xml
 
 Note that folders like "en-US" and "nb-NO" are content folders for specific locales, in this case American English (en-US) and Norwegian Bokmål (nb-NO). You don't need those two specifically, I just used them as an example. You should provide any other locales, such as French French (fr-FR) or British English (en-GB) in the same location.
 
-The **_flags** folder is where you should store flag icons for your locales. I strongly recommend [this set](http://www.famfamfam.com/lab/icons/flags/) from [famfamfam](http://www.famfamfam.com ), and I've included some of those in the sample project. 
+The **_icons** folder is where you can optionally store icons for your locales.
+
+*NOTE: In previous releases this folder was called "_flags", and for backwards compatibility reasons, using the old folder name will still work. However, after talking with a few friends and doing some research, I'm no longer recommending using national flags as icons for languages by default.*
 
 The **_index.xml** file contains details about your localization setup, and the sample has an example with plenty of comments to document the procedure. 
 

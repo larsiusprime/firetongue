@@ -50,6 +50,13 @@ class Replace
 		//does nothing
 	}
 	
+	/**
+	 * Replace all of the given flags found in the string with corresponding values
+	 * @param	string	the string to process
+	 * @param	flags	the flags we want to find in the string
+	 * @param	values	the values to replace those flags with
+	 * @return
+	 */
 	public static function flags(string:String, flags:Array<String>, values:Array<String>):String
 	{
 		var j:Int = 0;
