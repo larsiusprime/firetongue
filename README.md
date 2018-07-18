@@ -372,7 +372,6 @@ When your application first loads up, you might not be able to accurately assume
 
 - A default locale is chosen to initialize Firetongue (in this case "en-US")
 - A list of locales is presented to the user, each locale line consisting of:
-  - A regional flag image
   - The native name for the language ("English", "Español", "Italiano")
   - In parenthesis, the localized name for the language ("Spanish", "Italian")
   - The localized name of the region ("Spain", "Italy")
