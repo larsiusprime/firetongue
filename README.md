@@ -68,7 +68,7 @@ The **_icons** folder is where you can optionally store icons for your locales.
 
 The **_index.xml** file contains details about your localization setup, and the sample has an example with plenty of comments to document the procedure. 
 
-####Contexts:
+#### Contexts:
 
 Notably, at the beginning of your index.xml you should list the files you are loading:
 
@@ -141,7 +141,7 @@ First, read this:
 
 Also, just because some spreadsheet program accepts your crazy custom TSV/CSV format doesn't mean that it's correct, and it could easily make FireTongue choke. FireTongue supports exactly two specific formats -- TSV, and CSV, subject to these rules:
 
-###TSV
+### TSV
 *Properly* formatted firetongue TSV files:
 
 * Do NOT wrap cells in quotes or any other sort of formatting.
@@ -156,7 +156,7 @@ The TSV format is preferred because it is simpler and faster for both humans and
 
 All that said, a specific CSV file format is also supported.
 
-###CSV
+### CSV
 *Properly* formatted firetongue CSV files:
 
 * Wrap each cell in a standard double-quote character, ( " ), 0x22 in UTF-8
@@ -216,7 +216,7 @@ i.e, this:
 ```
 
 
-####Exporting TSV files from Excel
+#### Exporting TSV files from Excel
 
 First, click "save as --> other formats":<br>
 ![](/readme_assets/excel_saveas.png)
@@ -226,7 +226,7 @@ Select Text (tab delimeted)<br>
 
 Even though this is marked as a .txt file, it is really a TSV format. Firetongue assumes all ".txt" files are TSV-formatted.
 
-###Exporting TSV files from LibreOffice
+### Exporting TSV files from LibreOffice
 
 First, click "Save as", then select CSV Format. In LibreOffice, TSV format is a special kind of CSV, so both formats start with the same option.<br>
 ![](/readme_assets/libre_csv.png)
@@ -237,7 +237,7 @@ Enter ".tsv" as the file extension and make sure to check "automatic file name e
 You'll see something like this come up. It has already select {Tab} as the delimeter for you! Make sure the character set is Unicode (UTF-8), and make sure Text delimeter is blank. (It might be a quotation mark). Make sure "quote all text cells" is NOT checked.<br>
 ![](/readme_assets/libre_tsv_2.png)
 
-###Exporting CSV files
+### Exporting CSV files
 
 We recommend you use TSV files as they are the best supported, fastest parsing, and least bug-prone format.
 
@@ -470,7 +470,7 @@ You would most likely want to integrate this with a user interface library. In p
 
 FireTongue and [Flixel-UI](https://github.com/haxeflixel/flixel-ui) are specifically designed to work together, though this is set up so that they don't actually depend on each other to compile and run.
 
-A demo project, available here in [flixel-demos](https://github.com/HaxeFlixel/flixel-demos/tree/master/User%20Interface/RPG%20Interface) and on the [HaxeFlixel website](http://haxeflixel.com/demos/RPGInterface/) demonstrates this integration.
+A demo project, available here in [flixel-demos](https://github.com/HaxeFlixel/flixel-demos/tree/master/UserInterface/RPGInterface/source) and on the [HaxeFlixel website](http://haxeflixel.com/demos/RPGInterface/) demonstrates this integration.
 
 For more information, see Flixel-UI.
 
