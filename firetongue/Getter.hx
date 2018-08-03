@@ -24,6 +24,11 @@
 package firetongue;
 
 import firetongue.FireTongue.Framework;
+#if (lime >= "7.0.0")
+import lime.utils.Assets as LimeAssets;
+#elseif (lime && !lime_legacy)
+import lime.Assets as LimeAssets;
+#end
 
 /**
  * ...
@@ -150,7 +155,7 @@ class Getter
 	public function getDirectoryContents_Lime(path):Array<String>
 	{
 		#if (lime && !lime_legacy)
-			return limitPath(lime.Assets.list(TEXT), path);
+			return limitPath(LimeAssets.list(TEXT), path);
 		#else
 			return null;
 		#end
@@ -159,7 +164,7 @@ class Getter
 	public function getText_Lime(filename:String):String
 	{
 		#if (lime && !lime_legacy)
-			return lime.Assets.getText(filename);
+			return LimeAssets.getText(filename);
 		#else
 			return null;
 		#end
@@ -168,7 +173,7 @@ class Getter
 	public function checkFile_Lime(filename:String):Bool
 	{
 		#if (lime && !lime_legacy)
-			return lime.Assets.exists(filename);
+			return LimeAssets.exists(filename);
 		#else
 			return false;
 		#end
