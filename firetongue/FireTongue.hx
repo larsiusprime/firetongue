@@ -25,7 +25,12 @@ package firetongue;
 
 import firetongue.FireTongue.Case;
 import firetongue.FireTongue.LoadTask;
-import haxe.xml.Fast;
+
+#if haxe4
+	import haxe.xml.Access as Fast;
+#else
+	import haxe.xml.Fast;
+#end
 
 #if (sys)
 	import sys.FileSystem;
