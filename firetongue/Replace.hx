@@ -23,31 +23,25 @@
 
 package firetongue;
 
+/**
+ * Simple class to do variable replacements for localization
+ * 
+ * USAGE:
+ 	 * var str:String = fire_tongue.get("$GOT_X_GOLD"); //str now = "You got <X> gold coins!"
+ 	 * str = Replace.flags(str,["<X>"],[num_coins]);	//num_coins = "10"
+ 	 * 
+ 	 * //str now = "You got 10 gold coins!"
+ * 
+ * This method is preferably to schemes that do this:
+ * (str = "You got" + num_coins + " gold coins!")
+ *  
+ * Even if you translate the sentence fragments, each language has
+ * its own unique word order and sentence structure, so trying to embed
+ * that in code is a lost cuase. It's better to just let the translator 
+ * specify where the variable should fall, and replace it accordingly. 
+ */
 class Replace
 {
-	/**
-	 * Simple class to do variable replacements for localization
-	 * 
-	 * USAGE:
-		 * var str:String = fire_tongue.get("$GOT_X_GOLD"); //str now = "You got <X> gold coins!"
-		 * str = Replace.flags(str,["<X>"],[num_coins]);	//num_coins = "10"
-		 * 
-		 * //str now = "You got 10 gold coins!"
-	 * 
-	 * This method is preferably to schemes that do this:
-	 * (str = "You got" + num_coins + " gold coins!")
-	 *  
-	 * Even if you translate the sentence fragments, each language has
-	 * its own unique word order and sentence structure, so trying to embed
-	 * that in code is a lost cuase. It's better to just let the translator 
-	 * specify where the variable should fall, and replace it accordingly. 
-	 */
-	
-	public function new ()
-	{
-		//does nothing
-	}
-	
 	/**
 	 * Replace all of the given flags found in the string with corresponding values
 	 * @param	string	the string to process
@@ -68,6 +62,7 @@ class Replace
 			}
 			j++;
 		}
+
 		return string;
 	}
 }
