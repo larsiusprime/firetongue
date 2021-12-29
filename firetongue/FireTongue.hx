@@ -74,7 +74,7 @@ typedef FontData =
  *
  * //somewhere in your code: 
  * tongue = new FireTongue();
- * tongue.init({
+ * tongue.initialize({
  * 		locale: "en-US",
  * 		finishedCallback: onFinish
  * });

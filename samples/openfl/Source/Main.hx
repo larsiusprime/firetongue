@@ -67,7 +67,7 @@ class Main extends Sprite
 		// tongue = new FireTongue(OPENFL);					// explicitly request OpenFL asset loading (works on native, flash, & HTML5 targets)
 		// tongue = new FireTongue(VanillaSys);				// use sys.io.File and sys.Filesystem (works w/ any framework, but not on flash & HTML5 targets)
 
-		tongue.init({
+		tongue.initialize({
 			locale: "en-US",
 			finishedCallback: onFinish,
 			checkMissing: true
