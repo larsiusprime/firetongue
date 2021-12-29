@@ -161,11 +161,11 @@ class FireTongue
 	 * @param	asynchLoadMethod_ (optional) a method for loading the files asynchronously
 	 * @param	directory_ (optional) path to look for locale
 	 */
-	@:deprecated('This method has been deprecated. Use params instead.')
-	public inline extern overload function init(locale_:String, finished_:Void->Void = null, checkMissing_:Bool = false, replaceMissing_:Bool = false,
+	@:deprecated('init has been deprecated. Use initialize instead.')
+	public inline function init(locale_:String, finished_:Void->Void = null, checkMissing_:Bool = false, replaceMissing_:Bool = false,
 		?asynchLoadMethod_:Array<LoadTask>->Void, ?directory_:String = "assets/locales/"):Void
 	{
-		init({
+		initialize({
 			locale: locale_,
 			finishedCallback: finished_,
 			checkMissing: checkMissing_,
@@ -178,7 +178,7 @@ class FireTongue
 	 * Initialize the localization structure
 	 * @param	params initialization parameters
 	 */
-	public inline extern overload function init(params:FiretongueParams):Void
+	public function initialize(params:FiretongueParams):Void
 	{
 		var dirStr = params.directory;
 		if (dirStr == null || dirStr == "")
