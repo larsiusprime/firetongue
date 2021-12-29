@@ -34,31 +34,7 @@ package firetongue;
 	import sys.io.File;
 #end
 
-typedef FireTongueParams =
-{
-	/**
-	 * (optional) Your haxe framework, ie: OpenFL, Lime, VanillaSys, etc. Leave null for firetongue to make a best guess, or supply your own loading functions to ignore this parameter entirely.
-	 */
-	?framework:Framework,
-	/**
-	 * (optional) custom function to check if a file exists
-	 */
-	?checkFile:String->Bool,
-	/**
-	 * (optional) custom function to load a text file
-	 */
-	?getText:String->String,
-	/**
-	 * (optional) custom function to list the contents of a directory
-	 */
-	?getDirectoryContents:String->Array<String>,
-	/**
-	 * (optional) what case to force for flags in CSV/TSV files, and in the get() function -- default is to force uppercase.
-	 */
-	?forceCase:Case
-}
-
-typedef FireTongueLocalizationParams =
+typedef FiretongueParams =
 {
 	/**
 	 * desired locale string, ie, "en-US"
@@ -76,10 +52,6 @@ typedef FireTongueLocalizationParams =
 	 * (optional) if true, replaces any missing files & flags with values from the default locale
 	 */
 	?replaceMissing:Bool,
-	/**
-	 * (optional) a method for loading the files asynchronously
-	 */
-	?asynchLoadMethod:Array<LoadTask>->Void,
 	/**
 	 * (optional) path to look for locale
 	 */
@@ -152,16 +124,18 @@ class FireTongue
 	
 	/**
 	 * Creates a new Firetongue instance.
+	 * @param	framework (optional): Your haxe framework, ie: OpenFL, Lime, VanillaSys, etc. Leave null for firetongue to make a best guess, or supply your own loading functions to ignore this parameter entirely.
+	 * @param	checkFile (optional) custom function to check if a file exists
+	 * @param	getText (optional) custom function to load a text file
+	 * @param	getDirectoryContents (optional) custom function to list the contents of a directory
+	 * @param	forceCase (optional) what case to force for flags in CSV/TSV files, and in the get() function -- default is to force uppercase.
 	 */
-	public function new(params:FireTongueParams) 
+	public function new(?framework:Framework, ?checkFile:String->Bool, ?getText:String->String, ?getDirectoryContents:String->Array<String>, ?forceCase:Case = Case.Upper) 
 	{
-		if (params.forceCase == null)
-			params.forceCase = Case.Upper;
-
-		forceFlagsToCase = params.forceCase;
-		getter = new Getter(params.framework, params.checkFile, params.getText, getDirectoryContents);
+		forceFlagsToCase = forceCase;
+		getter = new Getter(framework, checkFile, getText, getDirectoryContents);
 	}
-	
+
 	/**
 	 * Clear all the current localization data. 
 	 * @param	hard Also clear all the index-related data, restoring it to a pre-initialized state.
@@ -173,14 +147,18 @@ class FireTongue
 	
 	/**
 	 * Initialize the localization structure
+	 * @param	params initialization parameters
 	 */
-	public function init(params:FireTongueLocalizationParams):Void
+	public function init(params:FiretongueParams):Void
 	{
-		if (params.directory == null)
-			params.directory = "assets/locales/";
+		var dirStr = params.directory;
+		if (dirStr == null || dirStr == "")
+		{
+			dirStr = "assets/locales/";
+		}
 
 		locale = localeFormat(params.locale);
-		directory = params.directory;
+		directory = dirStr;
 		
 		if (isLoaded)
 		{
@@ -1521,10 +1499,10 @@ abstract IndexString(String) from String to String
 enum Framework
 {
 	VanillaSys;
-	OpenFL;
-	Lime;
+	OPENFL;
+	LIME;
 	NME;
-	Custom;
+	CUSTOM;
 	//add more frameworks as they are supported ... maybe?
 }
 

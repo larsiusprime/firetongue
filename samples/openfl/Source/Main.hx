@@ -63,7 +63,7 @@ class Main extends Sprite {
 		
 		tongue = new FireTongue();							//firetongue will try to automatically detect a framework, in this case, OpenFL
 		/*tongue = new FireTongue({
-			framework: OpenFL	
+			framework: OPENFL	
 		});*/		//explicitly request OpenFL asset loading (works on native, flash, & HTML5 targets)
 		/*tongue = new FireTongue({
 			framework: VanillaSys
@@ -140,7 +140,11 @@ class Main extends Sprite {
 	
 	private function onClick2(e:MouseEvent):Void
 	{
-		tongue.init(nonexistant, onFinish2, true);
+		tongue.init({
+			locale: nonexistant,
+			finishedCallback: onFinish2,
+			checkMissing: true
+		});
 	}
 	
 	private function onClick(e:MouseEvent):Void
@@ -150,7 +154,11 @@ class Main extends Sprite {
 		if (i >= 0 && i < locales.length)
 		{
 			locale = locales[i];
-			tongue.init(locale, onFinish, true);
+			tongue.init({
+				locale: locale,
+				finishedCallback: onFinish,
+				checkMissing: true
+			});
 		}
 	}
 	
