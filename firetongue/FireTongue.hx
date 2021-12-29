@@ -58,6 +58,11 @@ typedef FiretongueParams =
 	?directory:String
 }
 
+typedef FontData = {
+    name:String,
+    size:Int
+}
+
 /**
  * FireTongue is a Haxe port of the localization framework used in Defender's Quest. 
  *
@@ -287,63 +292,55 @@ class FireTongue
 	
 	/**
 	 * Get a font name, honoring locale replacement rules
-	 * @param	str
-	 * @return
+	 * @param str 
+	 * @param size 
+	 * @return FontData
 	 */
-	
-	public function getFont(str:String):String
+	 public function getFont(str:String, size:Int):FontData
 	{
-		var replace:String = "";
+		var replace:FontData = {
+			name: "",
+			size: size
+		}
+
 		try
 		{
 			var xml:Fast = indexFont.get(str);
 			if (xml != null && xml.hasNode.font)
 			{
-				replace = xml.node.font.att.replace;
-			}
-			if (replace == "" || replace == null)
-			{
-				replace = str;
-			}
-		}
-		catch (e:Dynamic)
-		{
-			replace = str;
-		}
-		return replace;
-	}
-	
-	public function getFontSize(str:String, size:Int):Int
-	{
-		var replace:Int = size;
-		try
-		{
-			var xml:Fast = indexFont.get(str);
-			if (xml != null && xml.hasNode.font && xml.node.font.hasNode.size)
-			{
-				for (sizeNode in xml.node.font.nodes.size)
+				replace.name = xml.node.font.att.replace;
+
+				if (xml.node.font.hasNode.size)
 				{
-					var sizestr:String = Std.string(size);
-					if (sizeNode.att.value == sizestr)
+					for (sizeNode in xml.node.font.nodes.size)
 					{
-						var replacestr:String = sizeNode.att.replace;
-						if (replacestr != "" && replacestr != null)
+						var sizestr:String = Std.string(size);
+						if (sizeNode.att.value == sizestr)
 						{
-							replace = Std.parseInt(replacestr);
-							if (replace == 0)
+							var replacestr:String = sizeNode.att.replace;
+							if (replacestr != "" && replacestr != null)
 							{
-								replace = size;
+								replace.size = Std.parseInt(replacestr);
+								if (replace.size == 0)
+								{
+									replace.size = size;
+								}
 							}
 						}
-						
 					}
 				}
 			}
+			if (replace.name == "" || replace.name == null)
+			{
+				replace.name = str;
+			}
 		}
 		catch (e:Dynamic)
 		{
-			replace = size;
+			replace.name = str;
+			replace.size = size;
 		}
+
 		return replace;
 	}
 	
