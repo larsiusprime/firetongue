@@ -154,9 +154,31 @@ class FireTongue
 
 	/**
 	 * Initialize the localization structure
+	 * @param	locale_ desired locale string, ie, "en-US"
+	 * @param	finished_ callback for when it's done loading stuff
+	 * @param	checkMissing_ if true, compares current locale against default locale for missing files/flags
+	 * @param	replaceMissing_ if true, replaces any missing files & flags with values from the default locale
+	 * @param	asynchLoadMethod_ (optional) a method for loading the files asynchronously
+	 * @param	directory_ (optional) path to look for locale
+	 */
+	@:deprecated('This method has been deprecated. Use params instead.')
+	public inline extern overload function init(locale_:String, finished_:Void->Void = null, checkMissing_:Bool = false, replaceMissing_:Bool = false,
+		?asynchLoadMethod_:Array<LoadTask>->Void, ?directory_:String = "assets/locales/"):Void
+	{
+		init({
+			locale: locale_,
+			finishedCallback: finished_,
+			checkMissing: checkMissing_,
+			replaceMissing: replaceMissing_,
+			directory: directory_
+		});
+	}
+
+	/**
+	 * Initialize the localization structure
 	 * @param	params initialization parameters
 	 */
-	public function init(params:FiretongueParams):Void
+	public inline extern overload function init(params:FiretongueParams):Void
 	{
 		var dirStr = params.directory;
 		if (dirStr == null || dirStr == "")
@@ -343,6 +365,43 @@ class FireTongue
 			replace.size = size;
 		}
 
+		return replace;
+	}
+
+	/**
+	 * DEPRECATED! Use `getFont(str, size).size` instead;
+	 */
+	@:deprecated('getFontSize is deprecated. Use getFont instead.')
+	public function getFontSize(str:String, size:Int):Int
+	{
+		var replace:Int = size;
+		try
+		{
+			var xml:Fast = indexFont.get(str);
+			if (xml != null && xml.hasNode.font && xml.node.font.hasNode.size)
+			{
+				for (sizeNode in xml.node.font.nodes.size)
+				{
+					var sizestr:String = Std.string(size);
+					if (sizeNode.att.value == sizestr)
+					{
+						var replacestr:String = sizeNode.att.replace;
+						if (replacestr != "" && replacestr != null)
+						{
+							replace = Std.parseInt(replacestr);
+							if (replace == 0)
+							{
+								replace = size;
+							}
+						}
+					}
+				}
+			}
+		}
+		catch (e:Dynamic)
+		{
+			replace = size;
+		}
 		return replace;
 	}
 

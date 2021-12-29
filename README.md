@@ -464,7 +464,7 @@ Then at runtime you can call:
 var oldfont = "verdana";
 var oldsize = 12;
 var newfont = tongue.getFont(oldfont, oldsize);
-trace(newfont.name); // returns "comicsans"
+trace(newfont.name); // returns "arial"
 trace(newfont.size); // returns 14
 ```
 
