@@ -48,13 +48,13 @@ class Getter
 			#if nme
 				framework = NME;
 			#elseif (openfl || openfl_legacy)
-				framework = OpenFL;
+				framework = OPENFL;
 			#elseif lime
-				framework = Lime;
+				framework = LIME;
 			#elseif sys
 				framework = VanillaSys;
 			#else
-				framework = Custom;
+				framework = CUSTOM;
 			#end
 		}
 		else {
@@ -81,8 +81,8 @@ class Getter
 		}
 		return switch(framework)
 		{
-			case OpenFL:       checkFile_OpenFL(filename);
-			case Lime:         checkFile_Lime(filename);
+			case OPENFL:       checkFile_OpenFL(filename);
+			case LIME:         checkFile_Lime(filename);
 			case NME:          checkFile_NME(filename);
 			case VanillaSys:   checkFile_VanillaSys(filename);
 			default: false;
@@ -97,8 +97,8 @@ class Getter
 		}
 		return switch(framework)
 		{
-			case OpenFL:       getText_OpenFL(filename);
-			case Lime:         getText_Lime(filename);
+			case OPENFL:       getText_OpenFL(filename);
+			case LIME:         getText_Lime(filename);
 			case NME:          getText_NME(filename);
 			case VanillaSys:   getText_VanillaSys(filename);
 			default: null;
@@ -113,8 +113,8 @@ class Getter
 		}
 		return switch(framework)
 		{
-			case OpenFL:       getDirectoryContents_OpenFL(path);
-			case Lime:         getDirectoryContents_Lime(path);
+			case OPENFL:       getDirectoryContents_OpenFL(path);
+			case LIME:         getDirectoryContents_Lime(path);
 			case NME:          getDirectoryContents_NME(path);
 			case VanillaSys:   getDirectoryContents_VanillaSys(path);
 			default: [];
