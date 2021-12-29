@@ -20,6 +20,7 @@
  * THE SOFTWARE.
  * 
  */
+
 package;
 
 import flash.display.Bitmap;
@@ -39,20 +40,20 @@ import firetongue.Replace;
 import openfl.Assets;
 import openfl.display.Shape;
 
-class Main extends Sprite {
-
+class Main extends Sprite
+{
 	private var tongue:FireTongue;
 	private var locales:Array<String>;
 	private var text:TextField;
-	
+
 	private var nonexistant:String = "ERROR";
-	
-	public function new ()
+
+	public function new()
 	{
-		super ();
-		addEventListener(Event.ADDED_TO_STAGE, onInit, false, 0, true);	
+		super();
+		addEventListener(Event.ADDED_TO_STAGE, onInit, false, 0, true);
 	}
-	
+
 	public function onInit(e:Event):Void
 	{
 		text = new TextField();
@@ -60,59 +61,56 @@ class Main extends Sprite {
 		text.height = 400;
 		text.y = (600 - text.height) / 2;
 		addChild(text);
-		
-		tongue = new FireTongue();							//firetongue will try to automatically detect a framework, in this case, OpenFL
-		/*tongue = new FireTongue({
-			framework: OPENFL	
-		});*/		//explicitly request OpenFL asset loading (works on native, flash, & HTML5 targets)
-		/*tongue = new FireTongue({
-			framework: VanillaSys
-		});*/	//use sys.io.File and sys.Filesystem (works w/ any framework, but not on flash & HTML5 targets)
-		
+
+		// firetongue will try to automatically detect a framework, in this case, OpenFL
+		tongue = new FireTongue();
+		// tongue = new FireTongue(OPENFL);					// explicitly request OpenFL asset loading (works on native, flash, & HTML5 targets)
+		// tongue = new FireTongue(VanillaSys);				// use sys.io.File and sys.Filesystem (works w/ any framework, but not on flash & HTML5 targets)
+
 		tongue.init({
 			locale: "en-US",
 			finishedCallback: onFinish,
 			checkMissing: true
 		});
-		
+
 		locales = tongue.locales;
 		var xx:Float = 0;
-		
+
 		var i:Int = 0;
 		var lastx:Float = 0;
 		var lasty:Float = 0;
 		for (locale in locales)
 		{
 			var img = Assets.getBitmapData(tongue.getIcon(locale));
-			
+
 			var img2:BitmapData = new BitmapData(img.width * 2, img.height * 2, false, 0xff000000);
 			var matrix:Matrix = new Matrix();
 			matrix.identity();
 			matrix.scale(2, 2);
 			img2.draw(img, matrix);
-			
+
 			var up:Bitmap = new Bitmap(img2);
 			var img3:BitmapData = img2.clone();
 			img3.draw(img2, null, new ColorTransform(1, 1, 1, 1, 64, 64, 64, 0));
 			var over:Bitmap = new Bitmap(img3);
 			var down:Bitmap = new Bitmap(img2);
-			
+
 			var mb = new MyButton(up, over, down);
-			
+
 			mb.y = 4;
 			mb.x = xx + 4;
 			xx += (mb.width + 4);
-			
+
 			mb.name = "Locale" + i;
-			
+
 			addChild(mb);
 			mb.addEventListener(MouseEvent.CLICK, onClick);
 			i++;
-			
+
 			lastx = mb.x + mb.width + 4;
 			lasty = mb.y;
 		}
-		
+
 		var xgraphic:Shape = new Shape();
 		xgraphic.graphics.beginFill(0xFF0000);
 		xgraphic.graphics.drawRect(0, 0, 80, 32);
@@ -121,7 +119,7 @@ class Main extends Sprite {
 		xgraphic.graphics.lineTo(80, 32);
 		xgraphic.graphics.moveTo(80, 0);
 		xgraphic.graphics.lineTo(0, 32);
-		
+
 		var xgraphic2:Shape = new Shape();
 		xgraphic2.graphics.beginFill(0xFF8080);
 		xgraphic2.graphics.drawRect(0, 0, 80, 32);
@@ -130,14 +128,14 @@ class Main extends Sprite {
 		xgraphic2.graphics.lineTo(80, 32);
 		xgraphic2.graphics.moveTo(80, 0);
 		xgraphic2.graphics.lineTo(0, 32);
-		
+
 		var mb2 = new MyButton(xgraphic, xgraphic2, null);
 		addChild(mb2);
 		mb2.x = lastx;
 		mb2.y = lasty;
 		mb2.addEventListener(MouseEvent.CLICK, onClick2);
 	}
-	
+
 	private function onClick2(e:MouseEvent):Void
 	{
 		tongue.init({
@@ -146,10 +144,10 @@ class Main extends Sprite {
 			checkMissing: true
 		});
 	}
-	
+
 	private function onClick(e:MouseEvent):Void
 	{
-		var i = Std.parseInt (cast (e.currentTarget, Sprite).name.charAt (6));
+		var i = Std.parseInt(cast(e.currentTarget, Sprite).name.charAt(6));
 		var locale:String = "";
 		if (i >= 0 && i < locales.length)
 		{
@@ -161,25 +159,25 @@ class Main extends Sprite {
 			});
 		}
 	}
-	
+
 	private function onFinish2():Void
 	{
 		onFinish();
 		text.text = "Could not find locale \"" + nonexistant + "\", closest match was:\n" + text.text;
 	}
-	
+
 	private function onFinish():Void
 	{
 		var context = "data";
-		
-		text.text  = tongue.locale + "\n";
-		text.text += tongue.get("$INSTRUCTIONS",context) + "\n\n";
-		text.text += tongue.get("$HELLO_WORLD",context) + "\n";
-		text.text += tongue.get("$TEST_STRING",context) + "\n";
-		
+
+		text.text = tongue.locale + "\n";
+		text.text += tongue.get("$INSTRUCTIONS", context) + "\n\n";
+		text.text += tongue.get("$HELLO_WORLD", context) + "\n";
+		text.text += tongue.get("$TEST_STRING", context) + "\n";
+
 		if (tongue.missingFiles != null)
 		{
-			var str:String = tongue.get("$missingFiles",context);
+			var str:String = tongue.get("$missingFiles", context);
 			str = Replace.flags(str, ["<X>"], [Std.string(tongue.missingFiles.length)]);
 			text.text += str + "\n";
 			for (file in tongue.missingFiles)
@@ -187,29 +185,29 @@ class Main extends Sprite {
 				text.text += "    " + file + "\n";
 			}
 		}
-		
+
 		if (tongue.missingFlags != null)
 		{
 			var missingFlags = tongue.missingFlags;
-			
-			var miss_str:String = tongue.get("$missingFlags",context);
-			
+
+			var miss_str:String = tongue.get("$missingFlags", context);
+
 			var count:Int = 0;
 			var flag_str:String = "";
-			
+
 			for (key in missingFlags.keys())
 			{
 				var list:Array<String> = missingFlags.get(key);
 				count += list.length;
 				for (flag in list)
 				{
-					flag_str += "    Context("+key+"): " + flag + "\n";
+					flag_str += "    Context(" + key + "): " + flag + "\n";
 				}
 			}
-			
+
 			miss_str = Replace.flags(miss_str, ["<X>"], [Std.string(count)]);
 			text.text += miss_str + "\n";
 			text.text += flag_str + "\n";
 		}
-	}	
+	}
 }

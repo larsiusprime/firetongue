@@ -462,10 +462,10 @@ Then at runtime you can call:
 
 ```haxe
 var oldfont = "verdana";
-var newfont = tongue.getFont(oldfont);  //returns "comicsans"
-
 var oldsize = 12;
-var newsize = tongue.getFontSize(oldsize); //returns 14
+var newfont = tongue.getFont(oldfont, oldsize);
+trace(newfont.name); // returns "comicsans"
+trace(newfont.size); // returns 14
 ```
 
 You would most likely want to integrate this with a user interface library. In practice this can be used to make, say, German text smaller by default, or to put in a different font for cyrillic text with Russian, support asian font sets, etc.
