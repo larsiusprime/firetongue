@@ -29,35 +29,32 @@ import firetongue.CSV;
  * A simple TSV (tab separated values) structure
  * @author Lars Doucet
  */
-
 class TSV extends CSV
 {
-
 	/**
 	 * Parses TSV formatted string into a useable data structure
 	 * @param	input tsv-formatted string
 	 */
-	
-	public function new(input:String) 
+	public function new(input:String)
 	{
 		super(input, "\t", false);
 	}
-	
+
 	private override function processRows(rows:Array<String>):Void
 	{
 		for (i in 0...rows.length)
 		{
 			var row:String = rows[i];
-			while (row.charAt(row.length - 1) == "\t")		//trim trailing tabs
+			while (row.charAt(row.length - 1) == "\t") // trim trailing tabs
 			{
 				row = row.substr(0, row.length - 1);
 			}
 			processCells(getCells(row), i);
 		}
 	}
-	
+
 	private override function getCells(row:String):Array<String>
 	{
-		return row.split("\t");		//Get all the cells in a much simpler way
+		return row.split("\t"); // Get all the cells in a much simpler way
 	}
 }
