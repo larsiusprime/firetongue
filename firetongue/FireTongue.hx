@@ -153,7 +153,7 @@ class FireTongue
 	}
 
 	/**
-	 * Initialize the localization structure
+	 * DEPRECATED! Initialize the localization structure
 	 * @param	locale_ desired locale string, ie, "en-US"
 	 * @param	finished_ callback for when it's done loading stuff
 	 * @param	checkMissing_ if true, compares current locale against default locale for missing files/flags
