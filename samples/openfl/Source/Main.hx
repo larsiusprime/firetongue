@@ -62,10 +62,18 @@ class Main extends Sprite {
 		addChild(text);
 		
 		tongue = new FireTongue();							//firetongue will try to automatically detect a framework, in this case, OpenFL
-		//tongue = new FireTongue(Framework.OpenFL);		//explicitly request OpenFL asset loading (works on native, flash, & HTML5 targets)
-		//tongue = new FireTongue(Framework.VanillaSys);	//use sys.io.File and sys.Filesystem (works w/ any framework, but not on flash & HTML5 targets)
+		/*tongue = new FireTongue({
+			framework: OpenFL	
+		});*/		//explicitly request OpenFL asset loading (works on native, flash, & HTML5 targets)
+		/*tongue = new FireTongue({
+			framework: VanillaSys
+		});*/	//use sys.io.File and sys.Filesystem (works w/ any framework, but not on flash & HTML5 targets)
 		
-		tongue.init("en-US", onFinish, true);
+		tongue.init({
+			locale: "en-US",
+			finishedCallback: onFinish,
+			checkMissing: true
+		});
 		
 		locales = tongue.locales;
 		var xx:Float = 0;

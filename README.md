@@ -36,11 +36,15 @@ Passing no parameters to the Firetongue constructor will make it try to guess yo
 
 Then, initialize it with your chosen locale and a callback:
 ```haxe
-    tongue.init("en-US",onLoaded);
+    tongue.init({
+        locale: "en-US",
+        finishedCallback: onLoaded
+    });
    
     ...
     
-    function onLoaded():Void{
+    function onLoaded():Void
+    {
         trace(tongue.get("$HELLO_WORLD","data"));  
         //outputs "Hello, World!" 
         //(which is stored in the flag $HELLO_WORD in a file indexed by context id "data")
@@ -278,8 +282,9 @@ So here's how you would handle this with firetongue:
 ```haxe
     import firetongue.Replace;
 
-    str = fire_tongue_instance.get("$COLLECT_X_APPLES");
-    str = Replace.flags(str,["<X>"],[Std.string(num_apples)]);
+    str = tongue.get("$COLLECT_X_APPLES");
+    str = Replace.flags(str, ["<X>"], [Std.string(num_apples)]);
+    trace(str);
 ```
 
 The "Replace" class lets you feed in an array of custom variable names that match what's in the translation string, as well as an array of corresponding replacement values. 
@@ -475,18 +480,14 @@ For more information, see Flixel-UI.
 
 **Missing Files**
 
-If firetongue can't find a file on a get() call, it will by default return that file to you. You can force it to throw an error by setting the third parameter to false;
+If firetongue can't find a file on a get() call, it will by default return that file to you. You can force it to throw an error by setting the checkMissing parameter to false;
 
 When you load your files, you can tell FireTongue to check for missing files and flags:
 
 ```haxe
-    public function init(
-        locale_:String,        
-        finished_:Dynamic=null, 
-        check_missing_:Bool=false, 
-        replace_missing_:Bool = false, 
-        directory_:String=""
-    ):Void{
+    FireTongue.init({
+        checkMissing: false
+    });
 ```
 		
 *Check Missing*:

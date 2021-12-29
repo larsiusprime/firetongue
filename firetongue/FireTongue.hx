@@ -23,19 +23,68 @@
 
 package firetongue;
 
-import firetongue.FireTongue.Case;
-import firetongue.FireTongue.LoadTask;
-
 #if haxe4
 	import haxe.xml.Access as Fast;
 #else
 	import haxe.xml.Fast;
 #end
 
-#if (sys)
+#if sys
 	import sys.FileSystem;
 	import sys.io.File;
 #end
+
+typedef FireTongueParams =
+{
+	/**
+	 * (optional) Your haxe framework, ie: OpenFL, Lime, VanillaSys, etc. Leave null for firetongue to make a best guess, or supply your own loading functions to ignore this parameter entirely.
+	 */
+	?framework:Framework,
+	/**
+	 * (optional) custom function to check if a file exists
+	 */
+	?checkFile:String->Bool,
+	/**
+	 * (optional) custom function to load a text file
+	 */
+	?getText:String->String,
+	/**
+	 * (optional) custom function to list the contents of a directory
+	 */
+	?getDirectoryContents:String->Array<String>,
+	/**
+	 * (optional) what case to force for flags in CSV/TSV files, and in the get() function -- default is to force uppercase.
+	 */
+	?forceCase:Case
+}
+
+typedef FireTongueLocalizationParams =
+{
+	/**
+	 * desired locale string, ie, "en-US"
+	 */
+	locale:String,
+	/**
+	 * (optional) callback for when it's done loading stuff
+	 */
+	?finishedCallback:Void->Void,
+	/**
+	 * (optional) if true, compares current locale against default locale for missing files/flags
+	 */
+	?checkMissing:Bool,
+	/**
+	 * (optional) if true, replaces any missing files & flags with values from the default locale
+	 */
+	?replaceMissing:Bool,
+	/**
+	 * (optional) a method for loading the files asynchronously
+	 */
+	?asynchLoadMethod:Array<LoadTask>->Void,
+	/**
+	 * (optional) path to look for locale
+	 */
+	?directory:String
+}
 
 /**
  * FireTongue is a Haxe port of the localization framework used in Defender's Quest. 
@@ -47,7 +96,10 @@ import firetongue.FireTongue.LoadTask;
  *
  * //somewhere in your code: 
  * tongue = new FireTongue();
- * tongue.init("en-US",onFinish);
+ * tongue.init({
+ * 		locale: "en-US",
+ * 		finishedCallback: onFinish
+ * });
  *
  * function onFinish():Void
  * {
@@ -56,7 +108,6 @@ import firetongue.FireTongue.LoadTask;
  *
  * @author Lars Doucet
  */
-
 class FireTongue
 {
 	/**
@@ -101,23 +152,20 @@ class FireTongue
 	
 	/**
 	 * Creates a new Firetongue instance.
-	 * @param	framework (optional): Your haxe framework, ie: OpenFL, Lime, VanillaSys, etc. Leave null for firetongue to make a best guess, or supply your own loading functions to ignore this parameter entirely.
-	 * @param	checkFile (optional) custom function to check if a file exists
-	 * @param	getText (optional) custom function to load a text file
-	 * @param	getDirectoryContents (optional) custom function to list the contents of a directory
-	 * @param	forceCase (optional) what case to force for flags in CSV/TSV files, and in the get() function -- default is to force uppercase.
 	 */
-	public function new(?framework:Framework, ?checkFile:String->Bool, ?getText:String->String, ?getDirectoryContents:String->Array<String>, ?forceCase:Case=Case.Upper) 
+	public function new(params:FireTongueParams) 
 	{
-		forceFlagsToCase = forceCase;
-		getter = new Getter(framework, checkFile, getText, getDirectoryContents);
+		if (params.forceCase == null)
+			params.forceCase = Case.Upper;
+
+		forceFlagsToCase = params.forceCase;
+		getter = new Getter(params.framework, params.checkFile, params.getText, getDirectoryContents);
 	}
 	
 	/**
 	 * Clear all the current localization data. 
 	 * @param	hard Also clear all the index-related data, restoring it to a pre-initialized state.
 	 */
-	
 	public function clear(hard:Bool):Void
 	{
 		clearData(hard);
@@ -125,33 +173,29 @@ class FireTongue
 	
 	/**
 	 * Initialize the localization structure
-	 * @param	locale_ desired locale string, ie, "en-US"
-	 * @param	finished_ callback for when it's done loading stuff
-	 * @param	checkMissing_ if true, compares current locale against default locale for missing files/flags
-	 * @param	replaceMissing_ if true, replaces any missing files & flags with values from the default locale
-	 * @param	asynchLoadMethod_ (optional) a method for loading the files asynchronously
-	 * @param	directory_ (optional) path to look for locale
 	 */
-	
-	public function init(locale_:String, finished_:Void->Void = null, checkMissing_:Bool = false, replaceMissing_:Bool = false, ?asynchLoadMethod_:Array<LoadTask>->Void, ?directory_:String = "assets/locales/"):Void
+	public function init(params:FireTongueLocalizationParams):Void
 	{
-		locale = localeFormat(locale_);
-		directory = directory_;
+		if (params.directory == null)
+			params.directory = "assets/locales/";
+
+		locale = localeFormat(params.locale);
+		directory = params.directory;
 		
 		if (isLoaded)
 		{
 			clearData();	//if we have an existing locale already loaded, clear it out first
 		}
 		
-		callbackFinished = finished_;
+		callbackFinished = params.finishedCallback;
 		
 		checkMissing = false;
 		replaceMissing = false;
 		
 		if (locale != defaultLocale)
 		{
-			checkMissing = checkMissing_;
-			replaceMissing = replaceMissing_;
+			checkMissing = params.checkMissing;
+			replaceMissing = params.replaceMissing;
 		}
 		
 		if (checkMissing)
