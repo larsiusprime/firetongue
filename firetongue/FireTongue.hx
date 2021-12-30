@@ -374,35 +374,7 @@ class FireTongue
 	@:deprecated('getFontSize is deprecated. Use getFont instead.')
 	public function getFontSize(str:String, size:Int):Int
 	{
-		var replace:Int = size;
-		try
-		{
-			var xml:Fast = indexFont.get(str);
-			if (xml != null && xml.hasNode.font && xml.node.font.hasNode.size)
-			{
-				for (sizeNode in xml.node.font.nodes.size)
-				{
-					var sizestr:String = Std.string(size);
-					if (sizeNode.att.value == sizestr)
-					{
-						var replacestr:String = sizeNode.att.replace;
-						if (replacestr != "" && replacestr != null)
-						{
-							replace = Std.parseInt(replacestr);
-							if (replace == 0)
-							{
-								replace = size;
-							}
-						}
-					}
-				}
-			}
-		}
-		catch (e:Dynamic)
-		{
-			replace = size;
-		}
-		return replace;
+		return getFont(str, size).size;
 	}
 
 	/**

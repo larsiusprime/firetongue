@@ -138,7 +138,7 @@ class Main extends Sprite
 
 	private function onClick2(e:MouseEvent):Void
 	{
-		tongue.init({
+		tongue.initialize({
 			locale: nonexistant,
 			finishedCallback: onFinish2,
 			checkMissing: true
@@ -152,7 +152,7 @@ class Main extends Sprite
 		if (i >= 0 && i < locales.length)
 		{
 			locale = locales[i];
-			tongue.init({
+			tongue.initialize({
 				locale: locale,
 				finishedCallback: onFinish,
 				checkMissing: true
