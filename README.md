@@ -36,7 +36,7 @@ Passing no parameters to the Firetongue constructor will make it try to guess yo
 
 Then, initialize it with your chosen locale and a callback:
 ```haxe
-    tongue.init({
+    tongue.initialize({
         locale: "en-US",
         finishedCallback: onLoaded
     });
@@ -485,7 +485,7 @@ If firetongue can't find a file on a get() call, it will by default return that 
 When you load your files, you can tell FireTongue to check for missing files and flags:
 
 ```haxe
-    FireTongue.init({
+    FireTongue.initialize({
         checkMissing: false
     });
 ```
