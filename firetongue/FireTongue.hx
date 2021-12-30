@@ -320,7 +320,7 @@ class FireTongue
 	 * @param size 
 	 * @return FontData
 	 */
-	public function getFont(str:String, size:Int):FontData
+	public function getFontData(str:String, ?size:Int = 1):FontData
 	{
 		var replace:FontData = {
 			name: "",
@@ -369,12 +369,23 @@ class FireTongue
 	}
 
 	/**
-	 * DEPRECATED! Use `getFont(str, size).size` instead;
+	 * DEPRECATED! Use `getFontData(str, size).name` instead;
+	 * @param str 
+	 * @return FontData
 	 */
-	@:deprecated('getFontSize is deprecated. Use getFont instead.')
+	@:deprecated('getFont is deprecated. Use getFontData instead.')
+	public function getFont(str:String):String
+	{
+		return getFontData(str).name;
+	}
+
+	/**
+	 * DEPRECATED! Use `getFontData(str, size).size` instead;
+	 */
+	@:deprecated('getFontSize is deprecated. Use getFontData instead.')
 	public function getFontSize(str:String, size:Int):Int
 	{
-		return getFont(str, size).size;
+		return getFontData(str, size).size;
 	}
 
 	/**
