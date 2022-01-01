@@ -194,7 +194,10 @@ class FireTongue
 			clearData(); // if we have an existing locale already loaded, clear it out first
 		}
 
-		callbackFinished = params.finishedCallback;
+		if (finishedCallbacks.indexOf(params.finishedCallback) == -1)
+		{
+			finishedCallbacks.push(params.finishedCallback);
+		}
 
 		checkMissing = false;
 		replaceMissing = false;
@@ -613,7 +616,7 @@ class FireTongue
 	// Font replacement rules
 	private var indexFont:Map<String, Fast>;
 
-	private var callbackFinished:Void->Void;
+	private var finishedCallbacks:Array<Void->Void> = [];
 
 	private var listFiles:Array<Fast>;
 	private var filesLoaded:Int = 0;
@@ -638,8 +641,6 @@ class FireTongue
 	 */
 	private function clearData(hard:Bool = false):Void
 	{
-		callbackFinished = null;
-
 		if (listFiles != null)
 		{
 			while (listFiles.length > 0)
@@ -1139,6 +1140,7 @@ class FireTongue
 
 		if (filesLoaded == listFiles.length)
 		{
+			// Do this only after all files are loaded.
 			isLoaded = true;
 
 			if (checkMissing)
@@ -1158,20 +1160,39 @@ class FireTongue
 				}
 			}
 
-			if (callbackFinished != null)
+			if (finishedCallbacks.length > 0)
 			{
-				try
+				for (finishedCb in finishedCallbacks)
 				{
-					callbackFinished();
-				}
-				catch (msg:String)
-				{
-					#if debug
-					trace("ERROR msg = " + msg);
-					#end
+					try
+					{
+						finishedCb();
+					}
+					catch (msg:String)
+					{
+						#if debug
+						trace("ERROR msg = " + msg);
+						#end
+					}
 				}
 			}
 		}
+	}
+
+	public function addFinishedCallback(callback:Void->Void):Void
+	{
+		if (finishedCallbacks.indexOf(callback) == -1)
+			finishedCallbacks.push(callback);
+	}
+
+	public function removeFinishedCallback(callback:Void->Void):Void
+	{
+		finishedCallbacks.remove(callback);
+	}
+
+	public function clearFinishedCallbacks():Void
+	{
+		finishedCallbacks = [];
 	}
 
 	private function printIndex(id:String, index:Map<String, Dynamic>):Void
