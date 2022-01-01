@@ -44,7 +44,8 @@ typedef FiretongueParams =
 	locale:String,
 
 	/**
-	 * (optional) callback for when it's done loading stuff
+	 * (optional) callback which is executed when the locale is loaded
+   * note you can specify additional callbacks by calling `addFinishedCallback(...)`
 	 */
 	?finishedCallback:Void->Void,
 	/**
