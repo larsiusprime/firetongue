@@ -33,6 +33,9 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 
+import firetongue.format.CSV;
+import firetongue.format.TSV;
+
 typedef FiretongueParams =
 {
 	/**
@@ -194,10 +197,7 @@ class FireTongue
 			clearData(); // if we have an existing locale already loaded, clear it out first
 		}
 
-		if (finishedCallbacks.indexOf(params.finishedCallback) == -1)
-		{
-			finishedCallbacks.push(params.finishedCallback);
-		}
+    addFinishedCallback(params.finishedCallback);
 
 		checkMissing = false;
 		replaceMissing = false;

@@ -21,7 +21,7 @@
  * 
  */
 
-package firetongue;
+package firetongue.format;
 
 /**
  * A simple CSV (comma separated values) structure

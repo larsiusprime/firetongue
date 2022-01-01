@@ -21,9 +21,7 @@
  * 
  */
 
-package firetongue;
-
-import firetongue.CSV;
+package firetongue.format;
 
 /**
  * A simple TSV (tab separated values) structure
