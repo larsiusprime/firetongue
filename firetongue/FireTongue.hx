@@ -624,7 +624,7 @@ class FireTongue
 	private var checkMissing:Bool = false;
 	private var replaceMissing:Bool = false;
 
-	private var directory:String = "assets/locales";
+	public var directory(default, null):String = "assets/locales";
 
 	private function doReplace(s:String, sub:String, by:String):String
 	{
