@@ -1182,7 +1182,7 @@ class FireTongue
 
 	public function addFinishedCallback(callback:Void->Void):Void
 	{
-		if (finishedCallbacks.indexOf(callback) == -1)
+		if (callback != null && finishedCallbacks.indexOf(callback) == -1)
 			finishedCallbacks.push(callback);
 	}
 
