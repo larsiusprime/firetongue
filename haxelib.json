@@ -4,8 +4,8 @@
  "license": "MIT",
  "tags": ["translation","localization","language","text"],
  "description": "A framework-agnostic translation/localization library for Haxe",
- "version": "2.0.0",
+ "version": "2.1.0",
  "releasenote": "",
- "contributors": ["larsiusprime"],
+ "contributors": ["larsiusprime", "MasterEric"],
  "dependencies": {}
 }
