@@ -23,6 +23,12 @@
 
 package firetongue.format;
 
+#if (haxe_ver >= 4.2)
+import Std.isOfType;
+#else
+import Std.is as isOfType;
+#end
+
 /**
  * A simple CSV (comma separated values) structure
  * @author Lars Doucet
@@ -81,7 +87,7 @@ class CSV
 		if (thing == null)
 			return;
 
-		if (Std.isOfType(thing, Array))
+		if (isOfType(thing, Array))
 		{
 			clearArray(thing);
 		}
