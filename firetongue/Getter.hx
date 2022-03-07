@@ -24,10 +24,12 @@
 package firetongue;
 
 import firetongue.FireTongue.Framework;
+#if !macro
 #if (lime >= "7.0.0")
 import lime.utils.Assets as LimeAssets;
 #elseif (lime && !lime_legacy)
 import lime.Assets as LimeAssets;
+#end
 #end
 
 /**
@@ -125,8 +127,8 @@ class Getter
 	/*******OpenFL*******/
 	public function getDirectoryContents_OpenFL(path):Array<String>
 	{
-		#if (!nme && (openfl || openfl_legacy))
-		return limitPath(openfl.Assets.list(TEXT), path);
+		#if (!nme && (openfl || openfl_legacy) && !macro)
+		return limitPath(LimeAssets.list(TEXT), path);
 		#else
 		return null;
 		#end
@@ -134,8 +136,8 @@ class Getter
 
 	public function getText_OpenFL(filename:String):String
 	{
-		#if (openfl || openfl_legacy)
-		return openfl.Assets.getText(filename);
+		#if ((openfl || openfl_legacy) && !macro)
+		return LimeAssets.getText(filename);
 		#else
 		return null;
 		#end
@@ -143,8 +145,8 @@ class Getter
 
 	public function checkFile_OpenFL(filename:String):Bool
 	{
-		#if (openfl || openfl_legacy)
-		return openfl.Assets.exists(filename);
+		#if ((openfl || openfl_legacy) && !macro)
+		return LimeAssets.exists(filename);
 		#else
 		return false;
 		#end
@@ -153,7 +155,7 @@ class Getter
 	/*******Lime*******/
 	public function getDirectoryContents_Lime(path):Array<String>
 	{
-		#if (lime && !lime_legacy)
+		#if (lime && !lime_legacy && !macro)
 		return limitPath(LimeAssets.list(TEXT), path);
 		#else
 		return null;
@@ -162,7 +164,7 @@ class Getter
 
 	public function getText_Lime(filename:String):String
 	{
-		#if (lime && !lime_legacy)
+		#if (lime && !lime_legacy && !macro)
 		return LimeAssets.getText(filename);
 		#else
 		return null;
@@ -171,7 +173,7 @@ class Getter
 
 	public function checkFile_Lime(filename:String):Bool
 	{
-		#if (lime && !lime_legacy)
+		#if (lime && !lime_legacy && !macro)
 		return LimeAssets.exists(filename);
 		#else
 		return false;

@@ -32,7 +32,6 @@ import haxe.xml.Fast;
 import sys.FileSystem;
 import sys.io.File;
 #end
-
 import firetongue.format.CSV;
 import firetongue.format.TSV;
 
@@ -45,7 +44,7 @@ typedef FiretongueParams =
 
 	/**
 	 * (optional) callback which is executed when the locale is loaded
-   * note you can specify additional callbacks by calling `addFinishedCallback(...)`
+	 		* note you can specify additional callbacks by calling `addFinishedCallback(...)`
 	 */
 	?finishedCallback:Void->Void,
 	/**
@@ -85,7 +84,7 @@ typedef FontData =
  *
  * function onFinish():Void
  * {
- *    trace(tongue.get("$HELLO_WORLD"));
+ *    trace(tongue.get("HELLO_WORLD"));
  * }
  *
  * @author Lars Doucet
@@ -167,7 +166,7 @@ class FireTongue
 	 */
 	@:deprecated('init has been deprecated. Use initialize instead.')
 	public inline function init(locale_:String, finished_:Void->Void = null, checkMissing_:Bool = false, replaceMissing_:Bool = false,
-		?asynchLoadMethod_:Array<LoadTask>->Void, ?directory_:String = "assets/locales/"):Void
+			?asynchLoadMethod_:Array<LoadTask>->Void, ?directory_:String = "assets/locales/"):Void
 	{
 		initialize({
 			locale: locale_,
@@ -198,7 +197,7 @@ class FireTongue
 			clearData(); // if we have an existing locale already loaded, clear it out first
 		}
 
-    addFinishedCallback(params.finishedCallback);
+		addFinishedCallback(params.finishedCallback);
 
 		checkMissing = false;
 		replaceMissing = false;
@@ -220,7 +219,7 @@ class FireTongue
 
 	/**
 	 * Provide a localization flag to get the proper text in the current locale.
-	 * @param	flag a flag string, like "$HELLO"
+	 * @param	flag a flag string, like "HELLO_WORLD"
 	 * @param	context a string specifying which index, in case you want that
 	 * @param	safe if true, suppresses errors and returns the untranslated flag if not found
 	 * @return  the translated string
