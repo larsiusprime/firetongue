@@ -1543,7 +1543,7 @@ class FireTongue
 	}
 }
 
-@:enum
+enum
 abstract IndexString(String) from String to String
 {
 	var TheWordLanguage = "$UI_LANGUAGE";
@@ -1567,7 +1567,7 @@ enum Framework
 	// add more frameworks as they are supported ... maybe?
 }
 
-@:enum
+enum
 abstract Case(Int) from Int to Int
 {
 	var Upper = 1;
